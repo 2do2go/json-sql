@@ -1,0 +1,24 @@
+{
+	"name": "json-sql",
+	"description": "node.js json to sql queries mapper",
+	"version": "0.0.1",
+	"author": "Artem Zhukov <artzhuchka@gmail.com>",
+	"repository": {
+		"type": "git",
+		"url": "git@github.com:2do2go/json-sql.git"
+	},
+	"keywords": [
+		"json-sql", "json", "sql", "odm", "mapper", "db", "database"
+	],
+	"scripts": {
+		"test": "mocha test --reporter spec --bail"
+	},
+	"dependencies": {
+		"underscore": "1.5.2"
+	},
+	"devDependencies": {
+		"mocha": "1.15.1",
+		"expect.js": "0.2.0"
+	},
+	"main": "./lib/index"
+}
