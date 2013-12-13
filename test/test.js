@@ -333,5 +333,32 @@ describe('Builder', function() {
 				expect(result.values).to.eql({$p0: 1});
 			});
 		});
+
+		describe('insert', function() {
+			it('without values param', function() {
+				expect(function() {
+					queryBuilder({
+						type: 'insert',
+						table: 'users'
+					});
+				}).to.throwError(function(e) {
+					expect(e).to.be.a(BuilderError);
+					expect(e.message).to.be('Values is empty in query properties');
+				});
+			});
+
+			it('with values param', function() {
+				var result = queryBuilder({
+					type: 'insert',
+					table: 'users',
+					values: {
+						name: 'Max'
+					}
+				});
+
+				expect(result.query).to.be('insert into users ( name ) values ($p0);');
+				expect(result.values).to.eql({$p0: 'Max'});
+			});
+		});
 	});
 });
