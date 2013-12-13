@@ -220,12 +220,12 @@ describe('Builder', function() {
 				});
 
 				expect(result.query).to.be('select * from users ' +
-					'join payments on (name = payments.name) ' +
-					'natural join table2 as t2 on (name = t2.name) ' +
-					'natural left join table3 as t3 on (name = t3.name) ' +
-					'left outer join table4 as t4 on (name = t4.name) ' +
-					'inner join table5 as t5 on (name = t5.name) ' +
-					'cross join table6 as t6 on (name = t6.name);');
+					'join payments on name = payments.name ' +
+					'natural join table2 as t2 on name = t2.name ' +
+					'natural left join table3 as t3 on name = t3.name ' +
+					'left outer join table4 as t4 on name = t4.name ' +
+					'inner join table5 as t5 on name = t5.name ' +
+					'cross join table6 as t6 on name = t6.name;');
 				expect(result.values).to.eql({});
 			});
 
@@ -248,8 +248,8 @@ describe('Builder', function() {
 				});
 
 				expect(result.query).to.be('select * from users where ' +
-					'(((name = $p0 and age > $p1) or (((test in ($p2, $p3, $p4)) ' +
-					'and (sex != $p5)))));');
+					'(name = $p0 and age > $p1 or test in ($p2, $p3, $p4) ' +
+					'and sex != $p5);');
 				expect(result.values).to.eql({
 					$p0: 'Max',
 					$p1: 25,
