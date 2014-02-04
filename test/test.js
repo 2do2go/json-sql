@@ -48,7 +48,8 @@ describe('Builder', function() {
 			it('without table param', function() {
 				expect(queryBuilder).to.throwError(function(e) {
 					expect(e).to.be.a(BuilderError);
-					expect(e.message).to.be('Table name is not set in query properties');
+					expect(e.message).to.be('Table name or subselect is not set ' +
+						'in query properties');
 				});
 			});
 		});
@@ -135,11 +136,12 @@ describe('Builder', function() {
 					queryBuilder({
 						type: 'select',
 						table: 'users',
-						joins: [{}]
+						join: [{}]
 					});
 				}).to.throwError(function(e) {
 					expect(e).to.be.a(BuilderError);
-					expect(e.message).to.be('Join table name is not set in query properties');
+					expect(e.message).to.be('Join table name or subselect is not set ' +
+						'in query properties');
 				});
 			});
 
@@ -148,7 +150,7 @@ describe('Builder', function() {
 					queryBuilder({
 						type: 'select',
 						table: 'users',
-						joins: [{
+						join: [{
 							type: 'wrong',
 							table: 'payments'
 						}]
@@ -163,7 +165,7 @@ describe('Builder', function() {
 				var result = queryBuilder({
 					type: 'select',
 					table: 'users',
-					joins: [{
+					join: [{
 						table: 'payments'
 					}]
 				});
@@ -172,49 +174,67 @@ describe('Builder', function() {
 				expect(result.values).to.eql({});
 			});
 
+			it('with object join param', function() {
+				var result = queryBuilder({
+					type: 'select',
+					table: 'users',
+					join: {
+						payments: {
+							on: {
+								name: 'payments.name'
+							}
+						}
+					}
+				});
+
+				expect(result.query).to.be('select * from users join payments ' +
+					'on name = payments.name;');
+				expect(result.values).to.eql({});
+			});
+
 			it('with many joins with on param', function() {
 				var result = queryBuilder({
 					type: 'select',
 					table: 'users',
-					joins: [{
+					join: [{
 						table: 'payments',
 						on: {
-							name: {$field: 'payments.name'}
+							name: 'payments.name'
 						}
 					}, {
 						type: 'natural',
 						table: 'table2',
 						alias: 't2',
 						on: {
-							name: {$field: 't2.name'}
+							name: 't2.name'
 						}
 					}, {
 						type: 'natural left',
 						table: 'table3',
 						alias: 't3',
 						on: {
-							name: {$field: 't3.name'}
+							name: 't3.name'
 						}
 					}, {
 						type: 'left outer',
 						table: 'table4',
 						alias: 't4',
 						on: {
-							name: {$field: 't4.name'}
+							name: 't4.name'
 						}
 					}, {
 						type: 'inner',
 						table: 'table5',
 						alias: 't5',
 						on: {
-							name: {$field: 't5.name'}
+							name: 't5.name'
 						}
 					}, {
 						type: 'cross',
 						table: 'table6',
 						alias: 't6',
 						on: {
-							name: {$field: 't6.name'}
+							name: 't6.name'
 						}
 					}]
 				});
@@ -260,6 +280,117 @@ describe('Builder', function() {
 				});
 			});
 
+			it('with subselect from param', function() {
+				var result = queryBuilder({
+					type: 'select',
+					select: {
+						table: 'users',
+						condition: {
+							name: 'John'
+						}
+					},
+					condition: {
+						age: {$gt: 24}
+					}
+				});
+
+				expect(result.query).to.be('select * from (select * from users ' +
+					'where name = $p0) where age > $p1;');
+				expect(result.values).to.eql({
+					$p0: 'John',
+					$p1: 24
+				});
+			});
+
+			it('with subselect join param', function() {
+				var result = queryBuilder({
+					type: 'select',
+					table: 'users',
+					join: [{
+						type: 'inner',
+						select: {
+							table: 'roles',
+							condition: {name: 'admin'}
+						},
+						alias: 'r',
+						on: {roleId: 'r.id'}
+					}],
+					condition: {
+						age: {$gt: 24}
+					}
+				});
+
+				expect(result.query).to.be('select * from users inner join (select * ' +
+					'from roles where name = $p0) as r on roleId = r.id where age > $p1;');
+				expect(result.values).to.eql({
+					$p0: 'admin',
+					$p1: 24
+				});
+			});
+
+			it('with many subselect', function() {
+				var result = queryBuilder({
+					type: 'select',
+					select: {
+						select: {
+							select: {
+								select: {
+									table: 'test',
+									condition: {e: 5}
+								},
+								condition: {d: 4}
+							},
+							condition: {c: 3}
+						},
+						condition: {b: 2}
+					},
+					alias: 't1',
+					join: [{
+						type: 'left outer',
+						select: {
+							select: {
+								table: 'test2',
+								condition: {g: 7}
+							},
+							condition: {f: 6}
+						},
+						as: 't2',
+						on: {'t1.e': 't2.g'}
+					}, {
+						table: 'test3',
+						alias: 't3',
+						on: {'t1.e': 't3.a'}
+					}],
+					condition: {a: 1}
+				});
+
+				expect(result.query).to.be(
+					'select * from (' +
+						'select * from (' +
+							'select * from (' +
+								'select * from (' +
+									'select * from test where e = $p0' +
+								') where d = $p1' +
+							') where c = $p2' +
+						') where b = $p3' +
+					') as t1 ' +
+					'left outer join ('+
+						'select * from (' +
+							'select * from test2 where g = $p4' +
+						') where f = $p5' +
+					') on t1.e = t2.g ' +
+					'join test3 as t3 on t1.e = t3.a where a = $p6;'
+				);
+				expect(result.values).to.eql({
+					$p0: 5,
+					$p1: 4,
+					$p2: 3,
+					$p3: 2,
+					$p4: 7,
+					$p5: 6,
+					$p6: 1
+				});
+			});
 		});
 
 		describe('update', function() {
