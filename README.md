@@ -19,16 +19,16 @@ var sql = jsonSql.build({
 	type: 'select',
 	table: 'users',
 	fields: ['name', 'age'],
-	condition: {id: 6}
+	condition: {name: 'Max', id: 6}
 });
 
 sql.query
 // sql string:
-// select name, age from users where id = p0;
+// select name, age from users where name = p0 && id = 6;
 
 sql.values
 // hash of values:
-// { p0: 6 }
+// { p0: 'Max' }
 ```
 
 ## Documentation
@@ -72,10 +72,10 @@ var sql = jsonSql.build({
 });
 
 sql.query
-// insert into users (name, lastname, age, gender) values (p0, p1, p2, p3);
+// insert into users (name, lastname, age, gender) values (p0, p1, 24, p2);
 
 sql.values
-// { p0: 'John', p1: 'Snow', p2: 24, p3: 'male' }
+// { p0: 'John', p1: 'Snow', p2: 'male' }
 ```
 
 __Update:__
@@ -84,19 +84,20 @@ __Update:__
 var sql = jsonSql.build({
 	type: 'update',
 	table: 'users',
-	modifier: {
-		age: 33
-	},
 	condition: {
 		id: 5
+	},
+	modifier: {
+		role: 'admin'
+		age: 33
 	}
 });
 
 sql.query
-// update users set age = p0 where id = p1;
+// update users set role = p0, age = 33 where id = 5;
 
 sql.values
-// { p0: 33, p1: 5 }
+// { p0: 'admin' }
 ```
 
 __Remove:__
@@ -111,10 +112,10 @@ var sql = jsonSql.build({
 });
 
 sql.query
-// delete from users where id = p0;
+// delete from users where id = 5;
 
 sql.values
-// { p0: 5 }
+// {}
 ```
 
 For more examples, take a look at the [./tests directory](./tests).
