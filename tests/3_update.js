@@ -98,4 +98,22 @@ describe('update', function() {
 		expect(result.query).to.be('with t_1 as (select * from t_1) update users set age = age - 3;');
 		expect(result.values).to.eql({});
 	});
+
+	it('should be ok with `output`', function() {
+		var result = jsonSql.build({
+			type: 'update',
+			table: 'users',
+			modifier: {
+				$dec: {
+					age: 3
+				}
+			},
+			output: ['inserted.*']
+		});
+
+		expect(result.query).to.be(
+			'update users set age = age - 3 output inserted.*;'
+		);
+		expect(result.values).to.eql({});
+	});
 });

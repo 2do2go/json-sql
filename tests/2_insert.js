@@ -53,4 +53,24 @@ describe('insert', function() {
 		);
 		expect(result.values).to.eql({p0: 'Max'});
 	});
+
+	it('should be ok with `output`', function() {
+		var result = jsonSql.build({
+			type: 'insert',
+			table: 'users',
+			values: {
+				name: 'Max',
+				age: 17,
+				lastVisit: null,
+				active: true
+			},
+			output: ['inserted.*']
+		});
+
+		expect(result.query).to.be(
+			'insert into users (name, age, lastVisit, active) ' +
+			'output inserted.* values (p0, 17, null, true);'
+		);
+		expect(result.values).to.eql({p0: 'Max'});
+	});
 });

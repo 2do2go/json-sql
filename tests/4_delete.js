@@ -42,4 +42,17 @@ describe('delete', function() {
 		expect(result.query).to.be('with t_1 as (select * from t_1) delete from users;');
 		expect(result.values).to.eql({});
 	});
+
+	it('should be ok with `output`', function() {
+		var result = jsonSql.build({
+			type: 'remove',
+			table: 'users',
+			output: ['deleted.*']
+		});
+
+		expect(result.query).to.be(
+			'delete from users output deleted.*;'
+		);
+		expect(result.values).to.eql({});
+	});
 });
