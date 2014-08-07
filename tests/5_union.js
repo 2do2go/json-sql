@@ -3,7 +3,7 @@
 var jsonSql = require('../lib');
 var expect = require('expect.js');
 
-describe('union', function() {
+describe('union [all], except, intersect', function() {
 	it('should throw error with non-array `selects`', function() {
 		expect(function() {
 			jsonSql.build({

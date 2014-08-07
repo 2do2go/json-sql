@@ -7,7 +7,7 @@ Library for mapping mongo-style query objects to SQL queries.
 Install it with NPM or add it to your package.json:
 
 ``` bash
-  $ npm install json-sql
+$ npm install json-sql
 ```
 
 Then:

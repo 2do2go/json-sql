@@ -23,8 +23,8 @@ describe('delete', function() {
 			}
 		});
 
-		expect(result.query).to.be('delete from users where a = p0;');
-		expect(result.values).to.eql({p0: 5});
+		expect(result.query).to.be('delete from users where a = 5;');
+		expect(result.values).to.eql({});
 	});
 
 	it('should be ok with `with`', function() {

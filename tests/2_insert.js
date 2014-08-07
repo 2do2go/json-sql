@@ -40,12 +40,17 @@ describe('insert', function() {
 			type: 'insert',
 			table: 'users',
 			values: {
-				name: 'Max'
+				name: 'Max',
+				age: 17,
+				lastVisit: null,
+				active: true
 			}
 		});
 
-		expect(result.query).to.be('with t_1 as (select * from t_1) insert into users (name) values ' +
-			'(p0);');
+		expect(result.query).to.be(
+			'with t_1 as (select * from t_1) insert into users ' +
+			'(name, age, lastVisit, active) values (p0, 17, null, true);'
+		);
 		expect(result.values).to.eql({p0: 'Max'});
 	});
 });

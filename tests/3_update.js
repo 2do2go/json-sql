@@ -21,11 +21,15 @@ describe('update', function() {
 			type: 'update',
 			table: 'users',
 			modifier: {
-				name: 'Max'
+				name: 'Max',
+				age: 16,
+				lastVisit: null,
+				active: false
 			}
 		});
 
-		expect(result.query).to.be('update users set name = p0;');
+		expect(result.query).to.be('update users set name = p0, age = 16, lastVisit = null, ' +
+			'active = false;');
 		expect(result.values).to.eql({p0: 'Max'});
 	});
 
@@ -50,13 +54,13 @@ describe('update', function() {
 			table: 'users',
 			modifier: {
 				$inc: {
-					age: 1
+					age: 4
 				}
 			}
 		});
 
-		expect(result.query).to.be('update users set age = age + p0;');
-		expect(result.values).to.eql({p0: 1});
+		expect(result.query).to.be('update users set age = age + 4;');
+		expect(result.values).to.eql({});
 	});
 
 	it('should be ok with $dec `modifier`', function() {
@@ -65,13 +69,13 @@ describe('update', function() {
 			table: 'users',
 			modifier: {
 				$dec: {
-					age: 1
+					age: 2
 				}
 			}
 		});
 
-		expect(result.query).to.be('update users set age = age - p0;');
-		expect(result.values).to.eql({p0: 1});
+		expect(result.query).to.be('update users set age = age - 2;');
+		expect(result.values).to.eql({});
 	});
 
 	it('should be ok with `with`', function() {
@@ -86,12 +90,12 @@ describe('update', function() {
 			table: 'users',
 			modifier: {
 				$dec: {
-					age: 1
+					age: 3
 				}
 			}
 		});
 
-		expect(result.query).to.be('with t_1 as (select * from t_1) update users set age = age - p0;');
-		expect(result.values).to.eql({p0: 1});
+		expect(result.query).to.be('with t_1 as (select * from t_1) update users set age = age - 3;');
+		expect(result.values).to.eql({});
 	});
 });
