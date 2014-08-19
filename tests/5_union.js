@@ -1,6 +1,6 @@
 'use strict';
 
-var jsonSql = require('../lib');
+var jsonSql = require('../lib')();
 var expect = require('expect.js');
 
 describe('union [all], except, intersect', function() {

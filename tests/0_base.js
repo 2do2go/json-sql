@@ -1,7 +1,7 @@
 'use strict';
 
-var jsonSql = require('../lib');
-var Builder = jsonSql.Builder;
+var jsonSql = require('../lib')();
+var Builder = require('../lib').Builder;
 var expect = require('expect.js');
 
 describe('Builder', function() {

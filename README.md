@@ -13,7 +13,7 @@ $ npm install json-sql
 Then:
 
 ``` js
-var jsonSql = require('json-sql');
+var jsonSql = require('json-sql')();
 
 var sql = jsonSql.build({
 	type: 'select',
