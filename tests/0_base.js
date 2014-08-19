@@ -11,6 +11,9 @@ describe('Builder', function() {
 
 		expect(jsonSql.dialect).to.be.ok();
 
+		expect(jsonSql._query).to.be('');
+		expect(jsonSql._values).to.eql({});
+
 		expect(jsonSql.dialect.blocks).to.be.ok();
 		expect(jsonSql.dialect.templates).to.be.ok();
 		expect(jsonSql.dialect.conditions).to.be.ok();
@@ -112,5 +115,76 @@ describe('Builder', function() {
 
 		expect(result.query).to.be('with payments as (select * from payments) select * from users;');
 		expect(result.values).to.eql({});
+	});
+
+	it('should create array values with option `namedValues`=false', function() {
+		jsonSql.configure({
+			namedValues: false
+		});
+
+		expect(jsonSql._values).to.eql([]);
+
+		var result = jsonSql.build({
+			table: 'users',
+			condition: {name: 'John'}
+		});
+
+		expect(result.query).to.be('select * from users where name = $1;');
+		expect(result.values).to.eql(['John']);
+	});
+
+	it('should use prefix `@` for values with option `valuesPrefix`=@', function() {
+		jsonSql.configure({
+			valuesPrefix: '@'
+		});
+
+		var result = jsonSql.build({
+			table: 'users',
+			condition: {name: 'John'}
+		});
+
+		expect(result.query).to.be('select * from users where name = @p1;');
+		expect(result.values).to.eql({p1: 'John'});
+	});
+
+	it('should return prefixed values with method `getPrefixedValues`', function() {
+		var result = jsonSql.build({
+			table: 'users',
+			condition: {name: 'John'}
+		});
+
+		expect(result.query).to.be('select * from users where name = @p1;');
+		expect(result.values).to.eql({p1: 'John'});
+		expect(result.getPrefixedValues()).to.eql({'@p1': 'John'});
+	});
+
+	it('should return array values with method `toArray`', function() {
+		var result = jsonSql.build({
+			table: 'users',
+			condition: {name: 'John'}
+		});
+
+		expect(result.query).to.be('select * from users where name = @p1;');
+		expect(result.values).to.eql({p1: 'John'});
+		expect(result.toArray()).to.eql(['John']);
+	});
+
+	it('should return object values with method `toObject`', function() {
+		jsonSql.configure({
+			valuesPrefix: '$',
+			namedValues: false
+		});
+
+		expect(jsonSql._values).to.eql([]);
+
+		var result = jsonSql.build({
+			table: 'users',
+			condition: {name: 'John'}
+		});
+
+		expect(result.query).to.be('select * from users where name = $1;');
+		expect(result.values).to.eql(['John']);
+		expect(result.getPrefixedValues()).to.eql({'$1': 'John'});
+		expect(result.toObject()).to.eql({1: 'John'});
 	});
 });

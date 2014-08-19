@@ -24,11 +24,11 @@ var sql = jsonSql.build({
 
 sql.query
 // sql string:
-// select name, age from users where name = p0 && id = 6;
+// select name, age from users where name = $p1 && id = 6;
 
 sql.values
 // hash of values:
-// { p0: 'Max' }
+// { p1: 'Max' }
 ```
 
 ## Documentation
@@ -72,10 +72,10 @@ var sql = jsonSql.build({
 });
 
 sql.query
-// insert into users (name, lastname, age, gender) values (p0, p1, 24, p2);
+// insert into users (name, lastname, age, gender) values ($p1, $p2, 24, $p3);
 
 sql.values
-// { p0: 'John', p1: 'Snow', p2: 'male' }
+// { p1: 'John', p2: 'Snow', p3: 'male' }
 ```
 
 __Update:__
@@ -94,10 +94,10 @@ var sql = jsonSql.build({
 });
 
 sql.query
-// update users set role = p0, age = 33 where id = 5;
+// update users set role = $p1, age = 33 where id = 5;
 
 sql.values
-// { p0: 'admin' }
+// { p1: 'admin' }
 ```
 
 __Remove:__

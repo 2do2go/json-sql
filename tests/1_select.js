@@ -296,9 +296,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = p0;');
+			expect(result.query).to.be('select * from users where name = $p1;');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -310,9 +310,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = p0;');
+			expect(result.query).to.be('select * from users where name = $p1;');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -324,9 +324,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name != p0;');
+			expect(result.query).to.be('select * from users where name != $p1;');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -338,9 +338,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name > p0;');
+			expect(result.query).to.be('select * from users where name > $p1;');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -352,9 +352,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name < p0;');
+			expect(result.query).to.be('select * from users where name < $p1;');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -366,9 +366,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name >= p0;');
+			expect(result.query).to.be('select * from users where name >= $p1;');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -380,9 +380,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name <= p0;');
+			expect(result.query).to.be('select * from users where name <= $p1;');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -418,9 +418,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name like p0;');
+			expect(result.query).to.be('select * from users where name like $p1;');
 			expect(result.values).to.eql({
-				p0: 'John%'
+				p1: 'John%'
 			});
 		});
 
@@ -536,9 +536,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = p0 and age = 12;');
+			expect(result.query).to.be('select * from users where name = $p1 and age = 12;');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -569,9 +569,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = p0 and age = 12;');
+			expect(result.query).to.be('select * from users where name = $p1 and age = 12;');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -586,9 +586,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = p0 and age = 12;');
+			expect(result.query).to.be('select * from users where name = $p1 and age = 12;');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -603,9 +603,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = p0 or age = 12;');
+			expect(result.query).to.be('select * from users where name = $p1 or age = 12;');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -620,9 +620,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = p0 or age = 12;');
+			expect(result.query).to.be('select * from users where name = $p1 or age = 12;');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -637,9 +637,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where not (name = p0 and age = 12);');
+			expect(result.query).to.be('select * from users where not (name = $p1 and age = 12);');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -654,9 +654,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where not (name = p0 and age = 12);');
+			expect(result.query).to.be('select * from users where not (name = $p1 and age = 12);');
 			expect(result.values).to.eql({
-				p0: 'John'
+				p1: 'John'
 			});
 		});
 
@@ -678,12 +678,12 @@ describe('Select', function() {
 
 			expect(result.query).to.be(
 				'select * from users ' +
-					'where (name = p0 or age = 12) and ' +
-					'(name = p1 or age = 14);'
+					'where (name = $p1 or age = 12) and ' +
+					'(name = $p2 or age = 14);'
 			);
 			expect(result.values).to.eql({
-				p0: 'John',
-				p1: 'Mark'
+				p1: 'John',
+				p2: 'Mark'
 			});
 		});
 
@@ -707,12 +707,12 @@ describe('Select', function() {
 
 			expect(result.query).to.be(
 				'select * from users ' +
-					'where (name = p0 or age = 12) and ' +
-					'(name = p1 or age = 14);'
+					'where (name = $p1 or age = 12) and ' +
+					'(name = $p2 or age = 14);'
 			);
 			expect(result.values).to.eql({
-				p0: 'John',
-				p1: 'Mark'
+				p1: 'John',
+				p2: 'Mark'
 			});
 		});
 
@@ -732,12 +732,12 @@ describe('Select', function() {
 
 			expect(result.query).to.be(
 				'select * from users ' +
-					'where (name = p0 and age = 12) or ' +
-					'(name = p1 and age = 14);'
+					'where (name = $p1 and age = 12) or ' +
+					'(name = $p2 and age = 14);'
 			);
 			expect(result.values).to.eql({
-				p0: 'John',
-				p1: 'Mark'
+				p1: 'John',
+				p2: 'Mark'
 			});
 		});
 
@@ -761,12 +761,12 @@ describe('Select', function() {
 
 			expect(result.query).to.be(
 				'select * from users ' +
-					'where (name = p0 and age = 12) or ' +
-					'(name = p1 and age = 14);'
+					'where (name = $p1 and age = 12) or ' +
+					'(name = $p2 and age = 14);'
 			);
 			expect(result.values).to.eql({
-				p0: 'John',
-				p1: 'Mark'
+				p1: 'John',
+				p2: 'Mark'
 			});
 		});
 
@@ -784,11 +784,11 @@ describe('Select', function() {
 
 			expect(result.query).to.be(
 				'select * from users ' +
-					'where (name = p0 and age = 12) and ' +
-					'(name = p1 and age = 14);');
+					'where (name = $p1 and age = 12) and ' +
+					'(name = $p2 and age = 14);');
 			expect(result.values).to.eql({
-				p0: 'John',
-				p1: 'Mark'
+				p1: 'John',
+				p2: 'Mark'
 			});
 		});
 
@@ -808,12 +808,12 @@ describe('Select', function() {
 
 			expect(result.query).to.be(
 				'select * from users ' +
-					'where (name = p0 and age = 12) and ' +
-					'(name = p1 and age = 14);'
+					'where (name = $p1 and age = 12) and ' +
+					'(name = $p2 and age = 14);'
 			);
 			expect(result.values).to.eql({
-				p0: 'John',
-				p1: 'Mark'
+				p1: 'John',
+				p2: 'Mark'
 			});
 		});
 
@@ -837,12 +837,12 @@ describe('Select', function() {
 
 			expect(result.query).to.be(
 				'select * from users ' +
-					'where (name = p0 and age = 12) and ' +
-					'(name = p1 and age = 14);'
+					'where (name = $p1 and age = 12) and ' +
+					'(name = $p2 and age = 14);'
 			);
 			expect(result.values).to.eql({
-				p0: 'John',
-				p1: 'Mark'
+				p1: 'John',
+				p2: 'Mark'
 			});
 		});
 
@@ -866,12 +866,12 @@ describe('Select', function() {
 
 			expect(result.query).to.be(
 				'select * from users ' +
-					'where (name = p0 or age = 12) or ' +
-					'(name = p1 or age = 14);'
+					'where (name = $p1 or age = 12) or ' +
+					'(name = $p2 or age = 14);'
 			);
 			expect(result.values).to.eql({
-				p0: 'John',
-				p1: 'Mark'
+				p1: 'John',
+				p2: 'Mark'
 			});
 		});
 	});

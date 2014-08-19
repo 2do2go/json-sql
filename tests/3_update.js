@@ -28,9 +28,9 @@ describe('update', function() {
 			}
 		});
 
-		expect(result.query).to.be('update users set name = p0, age = 16, lastVisit = null, ' +
+		expect(result.query).to.be('update users set name = $p1, age = 16, lastVisit = null, ' +
 			'active = false;');
-		expect(result.values).to.eql({p0: 'Max'});
+		expect(result.values).to.eql({p1: 'Max'});
 	});
 
 	it('should be ok with $set `modifier`', function() {
@@ -44,8 +44,8 @@ describe('update', function() {
 			}
 		});
 
-		expect(result.query).to.be('update users set name = p0;');
-		expect(result.values).to.eql({p0: 'Max'});
+		expect(result.query).to.be('update users set name = $p1;');
+		expect(result.values).to.eql({p1: 'Max'});
 	});
 
 	it('should be ok with $inc `modifier`', function() {
