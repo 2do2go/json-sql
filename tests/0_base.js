@@ -147,7 +147,7 @@ describe('Builder', function() {
 		expect(result.values).to.eql({p1: 'John'});
 	});
 
-	it('should return prefixed values with method `getPrefixedValues`', function() {
+	it('should return prefixed values with method `prefixValues`', function() {
 		var result = jsonSql.build({
 			table: 'users',
 			condition: {name: 'John'}
@@ -155,10 +155,10 @@ describe('Builder', function() {
 
 		expect(result.query).to.be('select * from users where name = @p1;');
 		expect(result.values).to.eql({p1: 'John'});
-		expect(result.getPrefixedValues()).to.eql({'@p1': 'John'});
+		expect(result.prefixValues()).to.eql({'@p1': 'John'});
 	});
 
-	it('should return array values with method `toArray`', function() {
+	it('should return array values with method `getValuesArray`', function() {
 		var result = jsonSql.build({
 			table: 'users',
 			condition: {name: 'John'}
@@ -166,10 +166,10 @@ describe('Builder', function() {
 
 		expect(result.query).to.be('select * from users where name = @p1;');
 		expect(result.values).to.eql({p1: 'John'});
-		expect(result.toArray()).to.eql(['John']);
+		expect(result.getValuesArray()).to.eql(['John']);
 	});
 
-	it('should return object values with method `toObject`', function() {
+	it('should return object values with method `getValuesObject`', function() {
 		jsonSql.configure({
 			valuesPrefix: '$',
 			namedValues: false
@@ -184,7 +184,25 @@ describe('Builder', function() {
 
 		expect(result.query).to.be('select * from users where name = $1;');
 		expect(result.values).to.eql(['John']);
-		expect(result.getPrefixedValues()).to.eql({'$1': 'John'});
-		expect(result.toObject()).to.eql({1: 'John'});
+		expect(result.prefixValues()).to.eql({'$1': 'John'});
+		expect(result.getValuesObject()).to.eql({1: 'John'});
+	});
+
+	it('should create query without values with option `separatedValues`=false', function() {
+		jsonSql.configure({
+			separatedValues: false
+		});
+
+		expect(jsonSql._values).to.not.be.ok();
+		expect(jsonSql._placeholderId).to.not.be.ok();
+
+		var result = jsonSql.build({
+			type: 'insert',
+			table: 'users',
+			values: {name: 'John', surname: 'Doe'}
+		});
+
+		expect(result.query).to.be('insert into users (name, surname) values (\'John\', \'Doe\');');
+		expect(result.values).to.not.be.ok();
 	});
 });
