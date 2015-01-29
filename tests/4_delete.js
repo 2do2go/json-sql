@@ -10,7 +10,7 @@ describe('delete', function() {
 			table: 'users'
 		});
 
-		expect(result.query).to.be('delete from users;');
+		expect(result.query).to.be('delete from "users";');
 		expect(result.values).to.eql({});
 	});
 
@@ -23,7 +23,7 @@ describe('delete', function() {
 			}
 		});
 
-		expect(result.query).to.be('delete from users where a = 5;');
+		expect(result.query).to.be('delete from "users" where "a" = 5;');
 		expect(result.values).to.eql({});
 	});
 
@@ -39,7 +39,7 @@ describe('delete', function() {
 			table: 'users'
 		});
 
-		expect(result.query).to.be('with t_1 as (select * from t_1) delete from users;');
+		expect(result.query).to.be('with "t_1" as (select * from "t_1") delete from "users";');
 		expect(result.values).to.eql({});
 	});
 
@@ -51,7 +51,7 @@ describe('delete', function() {
 		});
 
 		expect(result.query).to.be(
-			'delete from users output deleted.*;'
+			'delete from "users" output "deleted".*;'
 		);
 		expect(result.values).to.eql({});
 	});

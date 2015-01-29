@@ -28,8 +28,8 @@ describe('update', function() {
 			}
 		});
 
-		expect(result.query).to.be('update users set name = $p1, age = 16, lastVisit = null, ' +
-			'active = false;');
+		expect(result.query).to.be('update "users" set "name" = $p1, "age" = 16, "lastVisit" = null, ' +
+			'"active" = false;');
 		expect(result.values).to.eql({p1: 'Max'});
 	});
 
@@ -44,7 +44,7 @@ describe('update', function() {
 			}
 		});
 
-		expect(result.query).to.be('update users set name = $p1;');
+		expect(result.query).to.be('update "users" set "name" = $p1;');
 		expect(result.values).to.eql({p1: 'Max'});
 	});
 
@@ -59,7 +59,7 @@ describe('update', function() {
 			}
 		});
 
-		expect(result.query).to.be('update users set age = age + 4;');
+		expect(result.query).to.be('update "users" set "age" = "age" + 4;');
 		expect(result.values).to.eql({});
 	});
 
@@ -74,7 +74,7 @@ describe('update', function() {
 			}
 		});
 
-		expect(result.query).to.be('update users set age = age - 2;');
+		expect(result.query).to.be('update "users" set "age" = "age" - 2;');
 		expect(result.values).to.eql({});
 	});
 
@@ -95,7 +95,7 @@ describe('update', function() {
 			}
 		});
 
-		expect(result.query).to.be('with t_1 as (select * from t_1) update users set age = age - 3;');
+		expect(result.query).to.be('with "t_1" as (select * from "t_1") update "users" set "age" = "age" - 3;');
 		expect(result.values).to.eql({});
 	});
 
@@ -112,7 +112,7 @@ describe('update', function() {
 		});
 
 		expect(result.query).to.be(
-			'update users set age = age - 3 output inserted.*;'
+			'update "users" set "age" = "age" - 3 output "inserted".*;'
 		);
 		expect(result.values).to.eql({});
 	});

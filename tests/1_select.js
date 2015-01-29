@@ -10,7 +10,7 @@ describe('Select', function() {
 				table: 'users'
 			});
 
-			expect(result.query).to.be('select * from users;');
+			expect(result.query).to.be('select * from "users";');
 			expect(result.values).to.eql({});
 		});
 
@@ -20,7 +20,7 @@ describe('Select', function() {
 				table: 'users'
 			});
 
-			expect(result.query).to.be('select * from users;');
+			expect(result.query).to.be('select * from "users";');
 			expect(result.values).to.eql({});
 		});
 	});
@@ -32,7 +32,7 @@ describe('Select', function() {
 				distinct: true
 			});
 
-			expect(result.query).to.be('select distinct * from users;');
+			expect(result.query).to.be('select distinct * from "users";');
 			expect(result.values).to.eql({});
 		});
 	});
@@ -44,7 +44,7 @@ describe('Select', function() {
 				fields: ['name', 'type']
 			});
 
-			expect(result.query).to.be('select name, type from users;');
+			expect(result.query).to.be('select "name", "type" from "users";');
 			expect(result.values).to.eql({});
 		});
 
@@ -54,7 +54,7 @@ describe('Select', function() {
 				fields: [{userAge: 'age'}]
 			});
 
-			expect(result.query).to.be('select userAge as age from users;');
+			expect(result.query).to.be('select "userAge" as "age" from "users";');
 			expect(result.values).to.eql({});
 		});
 
@@ -64,7 +64,7 @@ describe('Select', function() {
 				fields: [{field: 'address'}]
 			});
 
-			expect(result.query).to.be('select address from users;');
+			expect(result.query).to.be('select "address" from "users";');
 			expect(result.values).to.eql({});
 		});
 
@@ -74,7 +74,7 @@ describe('Select', function() {
 				fields: [{field: 'score', table: 'users'}]
 			});
 
-			expect(result.query).to.be('select users.score from users;');
+			expect(result.query).to.be('select "users"."score" from "users";');
 			expect(result.values).to.eql({});
 		});
 
@@ -84,7 +84,7 @@ describe('Select', function() {
 				fields: [{field: 'zoneName', alias: 'zone'}]
 			});
 
-			expect(result.query).to.be('select zoneName as zone from users;');
+			expect(result.query).to.be('select "zoneName" as "zone" from "users";');
 			expect(result.values).to.eql({});
 		});
 
@@ -94,7 +94,7 @@ describe('Select', function() {
 				fields: [{field: 'zoneName', table: 'users', alias: 'zone'}]
 			});
 
-			expect(result.query).to.be('select users.zoneName as zone from users;');
+			expect(result.query).to.be('select "users"."zoneName" as "zone" from "users";');
 			expect(result.values).to.eql({});
 		});
 
@@ -104,7 +104,7 @@ describe('Select', function() {
 				fields: {userAge: 'age', userScore: 'score'}
 			});
 
-			expect(result.query).to.be('select userAge as age, userScore as score from users;');
+			expect(result.query).to.be('select "userAge" as "age", "userScore" as "score" from "users";');
 			expect(result.values).to.eql({});
 		});
 
@@ -114,7 +114,7 @@ describe('Select', function() {
 				fields: {score: {table: 'users'}}
 			});
 
-			expect(result.query).to.be('select users.score from users;');
+			expect(result.query).to.be('select "users"."score" from "users";');
 			expect(result.values).to.eql({});
 		});
 
@@ -124,7 +124,7 @@ describe('Select', function() {
 				fields: {zone: {field: 'zone_1', alias: 'zone'}}
 			});
 
-			expect(result.query).to.be('select zone_1 as zone from users;');
+			expect(result.query).to.be('select "zone_1" as "zone" from "users";');
 			expect(result.values).to.eql({});
 		});
 
@@ -134,7 +134,7 @@ describe('Select', function() {
 				fields: {score: {table: 'users', alias: 's'}}
 			});
 
-			expect(result.query).to.be('select users.score as s from users;');
+			expect(result.query).to.be('select "users"."score" as "s" from "users";');
 			expect(result.values).to.eql({});
 		});
 
@@ -144,7 +144,48 @@ describe('Select', function() {
 				fields: {name: {field: 'name_1', table: 'users', alias: 'name_2'}}
 			});
 
-			expect(result.query).to.be('select users.name_1 as name_2 from users;');
+			expect(result.query).to.be('select "users"."name_1" as "name_2" from "users";');
+			expect(result.values).to.eql({});
+		});
+
+		it('should be ok with expression in `fields`', function() {
+			var result = jsonSql.build({
+				table: 'users',
+				fields: [{
+					expression: 'count(*)',
+					alias: 'count'
+				}]
+			});
+
+			expect(result.query).to.be('select count(*) as "count" from "users";');
+			expect(result.values).to.eql({});
+		});
+
+		it('should be ok with expression and field in `fields`', function() {
+			var result = jsonSql.build({
+				table: 'users',
+				fields: [{
+					expression: 'sum',
+					field: 'income',
+					alias: 'sum'
+				}]
+			});
+
+			expect(result.query).to.be('select sum("income") as "sum" from "users";');
+			expect(result.values).to.eql({});
+		});
+
+		it('should be ok with expression as array and field in `fields`', function() {
+			var result = jsonSql.build({
+				table: 'users',
+				fields: [{
+					expression: ['abs', 'sum'],
+					field: 'income',
+					alias: 'sum'
+				}]
+			});
+
+			expect(result.query).to.be('select abs(sum("income")) as "sum" from "users";');
 			expect(result.values).to.eql({});
 		});
 	});
@@ -156,7 +197,7 @@ describe('Select', function() {
 				alias: 'u'
 			});
 
-			expect(result.query).to.be('select * from users as u;');
+			expect(result.query).to.be('select * from "users" as "u";');
 			expect(result.values).to.eql({});
 		});
 	});
@@ -169,7 +210,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from (select * from t);');
+			expect(result.query).to.be('select * from (select * from "t");');
 			expect(result.values).to.eql({});
 		});
 	});
@@ -211,7 +252,7 @@ describe('Select', function() {
 				}]
 			});
 
-			expect(result.query).to.be('select * from users left outer join payments;');
+			expect(result.query).to.be('select * from "users" left outer join "payments";');
 			expect(result.values).to.eql({});
 		});
 
@@ -223,7 +264,7 @@ describe('Select', function() {
 				}]
 			});
 
-			expect(result.query).to.be('select * from users join payments;');
+			expect(result.query).to.be('select * from "users" join "payments";');
 			expect(result.values).to.eql({});
 		});
 
@@ -235,7 +276,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users join payments;');
+			expect(result.query).to.be('select * from "users" join "payments";');
 			expect(result.values).to.eql({});
 		});
 
@@ -249,7 +290,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users join payments on users.name = payments.name;');
+			expect(result.query).to.be('select * from "users" join "payments" on "users"."name" = "payments"."name";');
 			expect(result.values).to.eql({});
 		});
 
@@ -265,9 +306,9 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users ' +
-					'join (select * from payments) ' +
-					'on users.name = payments.name;'
+				'select * from "users" ' +
+					'join (select * from "payments") ' +
+					'on "users"."name" = "payments"."name";'
 			);
 			expect(result.values).to.eql({});
 		});
@@ -296,7 +337,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = $p1;');
+			expect(result.query).to.be('select * from "users" where "name" = $p1;');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -310,7 +351,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = $p1;');
+			expect(result.query).to.be('select * from "users" where "name" = $p1;');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -324,7 +365,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name != $p1;');
+			expect(result.query).to.be('select * from "users" where "name" != $p1;');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -338,7 +379,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name > $p1;');
+			expect(result.query).to.be('select * from "users" where "name" > $p1;');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -352,7 +393,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name < $p1;');
+			expect(result.query).to.be('select * from "users" where "name" < $p1;');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -366,7 +407,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name >= $p1;');
+			expect(result.query).to.be('select * from "users" where "name" >= $p1;');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -380,7 +421,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name <= $p1;');
+			expect(result.query).to.be('select * from "users" where "name" <= $p1;');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -394,7 +435,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name is null;');
+			expect(result.query).to.be('select * from "users" where "name" is null;');
 			expect(result.values).to.eql({});
 		});
 
@@ -406,7 +447,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name is not null;');
+			expect(result.query).to.be('select * from "users" where "name" is not null;');
 			expect(result.values).to.eql({});
 		});
 
@@ -418,7 +459,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name like $p1;');
+			expect(result.query).to.be('select * from "users" where "name" like $p1;');
 			expect(result.values).to.eql({
 				p1: 'John%'
 			});
@@ -432,7 +473,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name is null;');
+			expect(result.query).to.be('select * from "users" where "name" is null;');
 			expect(result.values).to.eql({});
 		});
 
@@ -444,7 +485,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name is not null;');
+			expect(result.query).to.be('select * from "users" where "name" is not null;');
 			expect(result.values).to.eql({});
 		});
 
@@ -456,7 +497,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = name_2;');
+			expect(result.query).to.be('select * from "users" where "name" = "name_2";');
 			expect(result.values).to.eql({});
 		});
 
@@ -468,7 +509,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = name_2;');
+			expect(result.query).to.be('select * from "users" where "name" = "name_2";');
 			expect(result.values).to.eql({});
 		});
 
@@ -480,7 +521,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where age in (12, 13, 14);');
+			expect(result.query).to.be('select * from "users" where "age" in (12, 13, 14);');
 			expect(result.values).to.eql({});
 		});
 
@@ -492,7 +533,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where age not in (12, 13, 14);');
+			expect(result.query).to.be('select * from "users" where "age" not in (12, 13, 14);');
 			expect(result.values).to.eql({});
 		});
 
@@ -504,7 +545,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where age between 12 and 14;');
+			expect(result.query).to.be('select * from "users" where "age" between 12 and 14;');
 			expect(result.values).to.eql({});
 		});
 	});
@@ -536,7 +577,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = $p1 and age = 12;');
+			expect(result.query).to.be('select * from "users" where "name" = $p1 and "age" = 12;');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -554,7 +595,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where age > 5 and age < 15 and age != 10;');
+			expect(result.query).to.be('select * from "users" where "age" > 5 and "age" < 15 and "age" != 10;');
 			expect(result.values).to.eql({});
 		});
 
@@ -569,7 +610,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = $p1 and age = 12;');
+			expect(result.query).to.be('select * from "users" where "name" = $p1 and "age" = 12;');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -586,7 +627,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = $p1 and age = 12;');
+			expect(result.query).to.be('select * from "users" where "name" = $p1 and "age" = 12;');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -603,7 +644,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = $p1 or age = 12;');
+			expect(result.query).to.be('select * from "users" where "name" = $p1 or "age" = 12;');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -620,7 +661,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where name = $p1 or age = 12;');
+			expect(result.query).to.be('select * from "users" where "name" = $p1 or "age" = 12;');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -637,7 +678,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where not (name = $p1 and age = 12);');
+			expect(result.query).to.be('select * from "users" where not ("name" = $p1 and "age" = 12);');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -654,7 +695,7 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from users where not (name = $p1 and age = 12);');
+			expect(result.query).to.be('select * from "users" where not ("name" = $p1 and "age" = 12);');
 			expect(result.values).to.eql({
 				p1: 'John'
 			});
@@ -677,9 +718,9 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users ' +
-					'where (name = $p1 or age = 12) and ' +
-					'(name = $p2 or age = 14);'
+				'select * from "users" ' +
+					'where ("name" = $p1 or "age" = 12) and ' +
+					'("name" = $p2 or "age" = 14);'
 			);
 			expect(result.values).to.eql({
 				p1: 'John',
@@ -706,9 +747,9 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users ' +
-					'where (name = $p1 or age = 12) and ' +
-					'(name = $p2 or age = 14);'
+				'select * from "users" ' +
+					'where ("name" = $p1 or "age" = 12) and ' +
+					'("name" = $p2 or "age" = 14);'
 			);
 			expect(result.values).to.eql({
 				p1: 'John',
@@ -731,9 +772,9 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users ' +
-					'where (name = $p1 and age = 12) or ' +
-					'(name = $p2 and age = 14);'
+				'select * from "users" ' +
+					'where ("name" = $p1 and "age" = 12) or ' +
+					'("name" = $p2 and "age" = 14);'
 			);
 			expect(result.values).to.eql({
 				p1: 'John',
@@ -760,9 +801,9 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users ' +
-					'where (name = $p1 and age = 12) or ' +
-					'(name = $p2 and age = 14);'
+				'select * from "users" ' +
+					'where ("name" = $p1 and "age" = 12) or ' +
+					'("name" = $p2 and "age" = 14);'
 			);
 			expect(result.values).to.eql({
 				p1: 'John',
@@ -783,9 +824,9 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users ' +
-					'where (name = $p1 and age = 12) and ' +
-					'(name = $p2 and age = 14);');
+				'select * from "users" ' +
+					'where ("name" = $p1 and "age" = 12) and ' +
+					'("name" = $p2 and "age" = 14);');
 			expect(result.values).to.eql({
 				p1: 'John',
 				p2: 'Mark'
@@ -807,9 +848,9 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users ' +
-					'where (name = $p1 and age = 12) and ' +
-					'(name = $p2 and age = 14);'
+				'select * from "users" ' +
+					'where ("name" = $p1 and "age" = 12) and ' +
+					'("name" = $p2 and "age" = 14);'
 			);
 			expect(result.values).to.eql({
 				p1: 'John',
@@ -836,9 +877,9 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users ' +
-					'where (name = $p1 and age = 12) and ' +
-					'(name = $p2 and age = 14);'
+				'select * from "users" ' +
+					'where ("name" = $p1 and "age" = 12) and ' +
+					'("name" = $p2 and "age" = 14);'
 			);
 			expect(result.values).to.eql({
 				p1: 'John',
@@ -865,9 +906,9 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users ' +
-					'where (name = $p1 or age = 12) or ' +
-					'(name = $p2 or age = 14);'
+				'select * from "users" ' +
+					'where ("name" = $p1 or "age" = 12) or ' +
+					'("name" = $p2 or "age" = 14);'
 			);
 			expect(result.values).to.eql({
 				p1: 'John',
@@ -884,7 +925,7 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users group by age;'
+				'select * from "users" group by "age";'
 			);
 			expect(result.values).to.eql({});
 		});
@@ -896,7 +937,7 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users group by age, gender;'
+				'select * from "users" group by "age", "gender";'
 			);
 			expect(result.values).to.eql({});
 		});
@@ -910,7 +951,7 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users order by age;'
+				'select * from "users" order by "age";'
 			);
 			expect(result.values).to.eql({});
 		});
@@ -922,7 +963,7 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users order by age, gender;'
+				'select * from "users" order by "age", "gender";'
 			);
 			expect(result.values).to.eql({});
 		});
@@ -937,7 +978,7 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users order by age asc, gender desc;'
+				'select * from "users" order by "age" asc, "gender" desc;'
 			);
 			expect(result.values).to.eql({});
 		});
@@ -951,7 +992,7 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users limit 5;'
+				'select * from "users" limit 5;'
 			);
 			expect(result.values).to.eql({});
 		});
@@ -963,7 +1004,7 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users limit -1 offset 5;'
+				'select * from "users" limit -1 offset 5;'
 			);
 			expect(result.values).to.eql({});
 		});
@@ -976,7 +1017,7 @@ describe('Select', function() {
 			});
 
 			expect(result.query).to.be(
-				'select * from users limit 10 offset 20;'
+				'select * from "users" limit 10 offset 20;'
 			);
 			expect(result.values).to.eql({});
 		});

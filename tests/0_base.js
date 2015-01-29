@@ -97,7 +97,7 @@ describe('Builder', function() {
 			table: 'users'
 		});
 
-		expect(result.query).to.be('with payments as (select * from payments) select * from users;');
+		expect(result.query).to.be('with "payments" as (select * from "payments") select * from "users";');
 		expect(result.values).to.eql({});
 	});
 
@@ -113,7 +113,7 @@ describe('Builder', function() {
 			table: 'users'
 		});
 
-		expect(result.query).to.be('with payments as (select * from payments) select * from users;');
+		expect(result.query).to.be('with "payments" as (select * from "payments") select * from "users";');
 		expect(result.values).to.eql({});
 	});
 
@@ -129,7 +129,7 @@ describe('Builder', function() {
 			condition: {name: 'John'}
 		});
 
-		expect(result.query).to.be('select * from users where name = $1;');
+		expect(result.query).to.be('select * from "users" where "name" = $1;');
 		expect(result.values).to.eql(['John']);
 	});
 
@@ -143,7 +143,7 @@ describe('Builder', function() {
 			condition: {name: 'John'}
 		});
 
-		expect(result.query).to.be('select * from users where name = @p1;');
+		expect(result.query).to.be('select * from "users" where "name" = @p1;');
 		expect(result.values).to.eql({p1: 'John'});
 	});
 
@@ -153,7 +153,7 @@ describe('Builder', function() {
 			condition: {name: 'John'}
 		});
 
-		expect(result.query).to.be('select * from users where name = @p1;');
+		expect(result.query).to.be('select * from "users" where "name" = @p1;');
 		expect(result.values).to.eql({p1: 'John'});
 		expect(result.prefixValues()).to.eql({'@p1': 'John'});
 	});
@@ -164,7 +164,7 @@ describe('Builder', function() {
 			condition: {name: 'John'}
 		});
 
-		expect(result.query).to.be('select * from users where name = @p1;');
+		expect(result.query).to.be('select * from "users" where "name" = @p1;');
 		expect(result.values).to.eql({p1: 'John'});
 		expect(result.getValuesArray()).to.eql(['John']);
 	});
@@ -182,7 +182,7 @@ describe('Builder', function() {
 			condition: {name: 'John'}
 		});
 
-		expect(result.query).to.be('select * from users where name = $1;');
+		expect(result.query).to.be('select * from "users" where "name" = $1;');
 		expect(result.values).to.eql(['John']);
 		expect(result.prefixValues()).to.eql({'$1': 'John'});
 		expect(result.getValuesObject()).to.eql({1: 'John'});
@@ -202,7 +202,35 @@ describe('Builder', function() {
 			values: {name: 'John', surname: 'Doe'}
 		});
 
-		expect(result.query).to.be('insert into users (name, surname) values (\'John\', \'Doe\');');
+		expect(result.query).to.be('insert into "users" ("name", "surname") values (\'John\', \'Doe\');');
 		expect(result.values).to.not.be.ok();
+	});
+
+	it('should create query without wrapping identifiers with option \'wrappedIdentifiers\'=false', function() {
+		jsonSql.configure({
+			wrappedIdentifiers: false
+		});
+
+		var result = jsonSql.build({
+			type: 'insert',
+			table: 'users',
+			values: {name: 'John'}
+		});
+
+		expect(result.query).to.be('insert into users (name) values ($p1);');
+	});
+
+	it('identifiers shouldn\'t be wrapped twice', function() {
+		jsonSql.configure({
+			wrappedIdentifiers: true
+		});
+
+		var result = jsonSql.build({
+			type: 'insert',
+			table: '"users"',
+			values: {'"name"': 'John'}
+		});
+
+		expect(result.query).to.be('insert into "users" ("name") values ($p1);');
 	});
 });

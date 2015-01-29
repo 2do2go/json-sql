@@ -25,7 +25,7 @@ describe('insert', function() {
 			}
 		});
 
-		expect(result.query).to.be('insert into users (name) values ($p1);');
+		expect(result.query).to.be('insert into "users" ("name") values ($p1);');
 		expect(result.values).to.eql({p1: 'Max'});
 	});
 
@@ -48,8 +48,8 @@ describe('insert', function() {
 		});
 
 		expect(result.query).to.be(
-			'with t_1 as (select * from t_1) insert into users ' +
-			'(name, age, lastVisit, active) values ($p1, 17, null, true);'
+			'with "t_1" as (select * from "t_1") insert into "users" ' +
+			'("name", "age", "lastVisit", "active") values ($p1, 17, null, true);'
 		);
 		expect(result.values).to.eql({p1: 'Max'});
 	});
@@ -68,8 +68,8 @@ describe('insert', function() {
 		});
 
 		expect(result.query).to.be(
-			'insert into users (name, age, lastVisit, active) ' +
-			'output inserted.* values ($p1, 17, null, true);'
+			'insert into "users" ("name", "age", "lastVisit", "active") ' +
+			'output "inserted".* values ($p1, 17, null, true);'
 		);
 		expect(result.values).to.eql({p1: 'Max'});
 	});

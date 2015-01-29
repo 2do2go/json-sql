@@ -40,7 +40,7 @@ describe('union [all], except, intersect', function() {
 			}]
 		});
 
-		expect(result.query).to.be('(select * from users) union (select * from vipUsers);');
+		expect(result.query).to.be('(select * from "users") union (select * from "vipUsers");');
 		expect(result.values).to.eql({});
 	});
 
@@ -54,21 +54,7 @@ describe('union [all], except, intersect', function() {
 			}]
 		});
 
-		expect(result.query).to.be('(select * from users) union all (select * from vipUsers);');
-		expect(result.values).to.eql({});
-	});
-
-	it('should be ok with `type` = "union all"', function() {
-		var result = jsonSql.build({
-			type: 'union all',
-			selects: [{
-				table: 'users'
-			}, {
-				table: 'vipUsers'
-			}]
-		});
-
-		expect(result.query).to.be('(select * from users) union all (select * from vipUsers);');
+		expect(result.query).to.be('(select * from "users") union all (select * from "vipUsers");');
 		expect(result.values).to.eql({});
 	});
 
@@ -82,7 +68,7 @@ describe('union [all], except, intersect', function() {
 			}]
 		});
 
-		expect(result.query).to.be('(select * from users) except (select * from vipUsers);');
+		expect(result.query).to.be('(select * from "users") except (select * from "vipUsers");');
 		expect(result.values).to.eql({});
 	});
 
@@ -96,7 +82,7 @@ describe('union [all], except, intersect', function() {
 			}]
 		});
 
-		expect(result.query).to.be('(select * from users) intersect (select * from vipUsers);');
+		expect(result.query).to.be('(select * from "users") intersect (select * from "vipUsers");');
 		expect(result.values).to.eql({});
 	});
 });
