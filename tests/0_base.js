@@ -21,29 +21,28 @@ describe('Builder', function() {
 		expect(jsonSql.dialect.logicalOperators).to.be.ok();
 	});
 
-	it('should throw error with wrong `type`', function() {
+	it('should throw error with wrong `type` property', function() {
 		expect(function() {
 			jsonSql.build({
-				type: 'wrong',
-				table: 'users'
+				type: 'wrong'
 			});
 		}).to.throwError(function(e) {
 			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Unknown template "wrong".');
+			expect(e.message).to.be('Unknown template type "wrong"');
 		});
 	});
 
-	it('should throw error without `table`', function() {
+	it('should throw error without `table`, `query` and `select` properties', function() {
 		expect(function() {
 			jsonSql.build({});
 		}).to.throwError(function(e) {
 			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Table name or subselect is not set in query ' +
-				'properties.');
+			expect(e.message).to.be('Neither `table`, `query`, `select` properties are not set in ' +
+				'`select` clause');
 		});
 	});
 
-	it('should throw error with both `table` and `select`', function() {
+	it('should throw error with both `table` and `select` properties', function() {
 		expect(function() {
 			jsonSql.build({
 				table: 'users',
@@ -51,12 +50,35 @@ describe('Builder', function() {
 			});
 		}).to.throwError(function(e) {
 			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Wrong using table name and subselect together ' +
-				'in query properties.');
+			expect(e.message).to.be('Wrong using `table`, `select` properties together in `select` clause');
 		});
 	});
 
-	it('should throw error without name in `with` clause', function() {
+	it('should throw error with both `table` and `query` properties', function() {
+		expect(function() {
+			jsonSql.build({
+				table: 'users',
+				query: {table: 'payments'}
+			});
+		}).to.throwError(function(e) {
+			expect(e).to.be.a(Error);
+			expect(e.message).to.be('Wrong using `table`, `query` properties together in `select` clause');
+		});
+	});
+
+	it('should throw error with both `query` and `select` properties', function() {
+		expect(function() {
+			jsonSql.build({
+				query: {table: 'payments'},
+				select: {table: 'payments'}
+			});
+		}).to.throwError(function(e) {
+			expect(e).to.be.a(Error);
+			expect(e.message).to.be('Wrong using `query`, `select` properties together in `select` clause');
+		});
+	});
+
+	it('should throw error without `name` property in `with` clause', function() {
 		expect(function() {
 			jsonSql.build({
 				'with': [{
@@ -68,11 +90,11 @@ describe('Builder', function() {
 			});
 		}).to.throwError(function(e) {
 			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Name is not set in with clause.');
+			expect(e.message).to.be('`name` property is not set in `with` clause');
 		});
 	});
 
-	it('should throw error without select in `with` clause', function() {
+	it('should throw error without `query` and `select` properties in `with` clause', function() {
 		expect(function() {
 			jsonSql.build({
 				'with': [{
@@ -82,11 +104,27 @@ describe('Builder', function() {
 			});
 		}).to.throwError(function(e) {
 			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Select query is not set in with clause.');
+			expect(e.message).to.be('Neither `query`, `select` properties are not set in `with` clause');
 		});
 	});
 
-	it('should be ok with array `with`', function() {
+	it('should throw error with both `query` and `select` properties in `with` clause', function() {
+		expect(function() {
+			jsonSql.build({
+				'with': [{
+					name: 'payments',
+					query: {table: 'table1'},
+					select: {table: 'table2'}
+				}],
+				table: 'users'
+			});
+		}).to.throwError(function(e) {
+			expect(e).to.be.a(Error);
+			expect(e.message).to.be('Wrong using `query`, `select` properties together in `with` clause');
+		});
+	});
+
+	it('should be ok with array in `with` clause', function() {
 		var result = jsonSql.build({
 			'with': [{
 				name: 'payments',
@@ -97,11 +135,12 @@ describe('Builder', function() {
 			table: 'users'
 		});
 
-		expect(result.query).to.be('with "payments" as (select * from "payments") select * from "users";');
+		expect(result.query).to.be('with "payments" as (select * from "payments") select * from ' +
+			'"users";');
 		expect(result.values).to.eql({});
 	});
 
-	it('should be ok with object `with`', function() {
+	it('should be ok with object in `with` clause', function() {
 		var result = jsonSql.build({
 			'with': {
 				payments: {
@@ -113,11 +152,12 @@ describe('Builder', function() {
 			table: 'users'
 		});
 
-		expect(result.query).to.be('with "payments" as (select * from "payments") select * from "users";');
+		expect(result.query).to.be('with "payments" as (select * from "payments") select * from ' +
+			'"users";');
 		expect(result.values).to.eql({});
 	});
 
-	it('should create array values with option `namedValues`=false', function() {
+	it('should create array values with option `namedValues` = false', function() {
 		jsonSql.configure({
 			namedValues: false
 		});
@@ -133,7 +173,7 @@ describe('Builder', function() {
 		expect(result.values).to.eql(['John']);
 	});
 
-	it('should use prefix `@` for values with option `valuesPrefix`=@', function() {
+	it('should use prefix `@` for values with option `valuesPrefix` = @', function() {
 		jsonSql.configure({
 			valuesPrefix: '@'
 		});
@@ -188,7 +228,7 @@ describe('Builder', function() {
 		expect(result.getValuesObject()).to.eql({1: 'John'});
 	});
 
-	it('should create query without values with option `separatedValues`=false', function() {
+	it('should create query without values with option `separatedValues` = false', function() {
 		jsonSql.configure({
 			separatedValues: false
 		});
@@ -206,21 +246,42 @@ describe('Builder', function() {
 		expect(result.values).to.not.be.ok();
 	});
 
-	it('should create query without wrapping identifiers with option \'wrappedIdentifiers\'=false', function() {
+	it('should create query without wrapping identifiers with option `wrappedIdentifiers` = false',
+		function() {
+			jsonSql.configure({
+				wrappedIdentifiers: false
+			});
+
+			var result = jsonSql.build({
+				type: 'insert',
+				table: 'users',
+				values: {name: 'John'}
+			});
+
+			expect(result.query).to.be('insert into users (name) values ($p1);');
+		}
+	);
+
+	it('should throw error if identifier contains more than one dot', function() {
 		jsonSql.configure({
-			wrappedIdentifiers: false
+			wrappedIdentifiers: true
 		});
 
-		var result = jsonSql.build({
-			type: 'insert',
-			table: 'users',
-			values: {name: 'John'}
+		expect(function() {
+			jsonSql.build({
+				type: 'insert',
+				table: '"users"',
+				values: {
+					'users.a.b': 1
+				}
+			});
+		}).to.throwError(function(e) {
+			expect(e).to.be.a(Error);
+			expect(e.message).to.be('Can\'t wrap identifier with name name "users.a.b"');
 		});
-
-		expect(result.query).to.be('insert into users (name) values ($p1);');
 	});
 
-	it('identifiers shouldn\'t be wrapped twice', function() {
+	it('shouldn\'t wrap identifiers twice', function() {
 		jsonSql.configure({
 			wrappedIdentifiers: true
 		});
@@ -228,9 +289,29 @@ describe('Builder', function() {
 		var result = jsonSql.build({
 			type: 'insert',
 			table: '"users"',
-			values: {'"name"': 'John'}
+			values: {
+				'"name"': 'John',
+				'"users"."age"': 22
+			}
 		});
 
-		expect(result.query).to.be('insert into "users" ("name") values ($p1);');
+		expect(result.query).to.be('insert into "users" ("name", "users"."age") values ($p1, 22);');
+	});
+
+	it('should wrap identifiers with dots', function() {
+		jsonSql.configure({
+			wrappedIdentifiers: true
+		});
+
+		var result = jsonSql.build({
+			type: 'insert',
+			table: '"users"',
+			values: {
+				'name': 'John',
+				'users.age': 22
+			}
+		});
+
+		expect(result.query).to.be('insert into "users" ("name", "users"."age") values ($p1, 22);');
 	});
 });

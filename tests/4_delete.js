@@ -3,8 +3,8 @@
 var jsonSql = require('../lib')();
 var expect = require('expect.js');
 
-describe('delete', function() {
-	it('should be ok without `condition`', function() {
+describe('Delete', function() {
+	it('should be ok without `condition` property', function() {
 		var result = jsonSql.build({
 			type: 'remove',
 			table: 'users'
@@ -14,7 +14,7 @@ describe('delete', function() {
 		expect(result.values).to.eql({});
 	});
 
-	it('should be ok with `condition`', function() {
+	it('should be ok with `condition` property', function() {
 		var result = jsonSql.build({
 			type: 'remove',
 			table: 'users',
@@ -27,7 +27,7 @@ describe('delete', function() {
 		expect(result.values).to.eql({});
 	});
 
-	it('should be ok with `with`', function() {
+	it('should be ok with `with` property', function() {
 		var result = jsonSql.build({
 			'with': [{
 				name: 't_1',
@@ -43,15 +43,15 @@ describe('delete', function() {
 		expect(result.values).to.eql({});
 	});
 
-	it('should be ok with `output`', function() {
+	it('should be ok with `returning` property', function() {
 		var result = jsonSql.build({
 			type: 'remove',
 			table: 'users',
-			output: ['deleted.*']
+			returning: ['users.*']
 		});
 
 		expect(result.query).to.be(
-			'delete from "users" output "deleted".*;'
+			'delete from "users" returning "users".*;'
 		);
 		expect(result.values).to.eql({});
 	});

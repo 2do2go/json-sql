@@ -3,8 +3,8 @@
 var jsonSql = require('../lib')();
 var expect = require('expect.js');
 
-describe('insert', function() {
-	it('should throw error without `values`', function() {
+describe('Insert', function() {
+	it('should throw error without `values` property', function() {
 		expect(function() {
 			jsonSql.build({
 				type: 'insert',
@@ -12,11 +12,11 @@ describe('insert', function() {
 			});
 		}).to.throwError(function(e) {
 			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Values is empty in query properties.');
+			expect(e.message).to.be('`values` property is not set in `insert` clause');
 		});
 	});
 
-	it('should be ok with `values`', function() {
+	it('should be ok with `values` property', function() {
 		var result = jsonSql.build({
 			type: 'insert',
 			table: 'users',
@@ -29,7 +29,7 @@ describe('insert', function() {
 		expect(result.values).to.eql({p1: 'Max'});
 	});
 
-	it('should be ok with `with`', function() {
+	it('should be ok with `with` property', function() {
 		var result = jsonSql.build({
 			'with': [{
 				name: 't_1',
@@ -54,7 +54,7 @@ describe('insert', function() {
 		expect(result.values).to.eql({p1: 'Max'});
 	});
 
-	it('should be ok with `output`', function() {
+	it('should be ok with `returning` property', function() {
 		var result = jsonSql.build({
 			type: 'insert',
 			table: 'users',
@@ -64,12 +64,12 @@ describe('insert', function() {
 				lastVisit: null,
 				active: true
 			},
-			output: ['inserted.*']
+			returning: ['users.*']
 		});
 
 		expect(result.query).to.be(
 			'insert into "users" ("name", "age", "lastVisit", "active") ' +
-			'output "inserted".* values ($p1, 17, null, true);'
+			'values ($p1, 17, null, true) returning "users".*;'
 		);
 		expect(result.values).to.eql({p1: 'Max'});
 	});
