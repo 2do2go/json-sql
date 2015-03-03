@@ -606,6 +606,18 @@ describe('Select', function() {
 				expect(result.values).to.eql({});
 			});
 
+			it('should add `null` value with empty array in `$in` operator', function() {
+				var result = jsonSql.build({
+					table: 'users',
+					condition: {
+						age: {$in: []}
+					}
+				});
+
+				expect(result.query).to.be('select * from "users" where "age" in (null);');
+				expect(result.values).to.eql({});
+			});
+
 			it('should be ok with `$nin` operator', function() {
 				var result = jsonSql.build({
 					table: 'users',
@@ -615,6 +627,18 @@ describe('Select', function() {
 				});
 
 				expect(result.query).to.be('select * from "users" where "age" not in (12, 13, 14);');
+				expect(result.values).to.eql({});
+			});
+
+			it('should add `null` value with empty array in `$nin` operator', function() {
+				var result = jsonSql.build({
+					table: 'users',
+					condition: {
+						age: {$nin: []}
+					}
+				});
+
+				expect(result.query).to.be('select * from "users" where "age" not in (null);');
 				expect(result.values).to.eql({});
 			});
 
