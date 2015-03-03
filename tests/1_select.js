@@ -636,13 +636,16 @@ describe('Select', function() {
 				var result = jsonSql.build({
 					table: 'users',
 					condition: {
-						age: {$in: {query: {
-							table: 'test'
-						}}}
+						age: {$in: {
+							query: {
+								table: 'test'
+							}
+						}}
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "age" in (select * from "test");');
+				expect(result.query).to.be('select * from "users" where "age" in (select * from ' +
+					'(select * from "test"));');
 				expect(result.values).to.eql({});
 			});
 
@@ -650,13 +653,16 @@ describe('Select', function() {
 				var result = jsonSql.build({
 					table: 'users',
 					condition: {
-						age: {$in: {select: {
-							table: 'test'
-						}}}
+						age: {$in: {
+							select: {
+								table: 'test'
+							}
+						}}
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "age" in (select * from "test");');
+				expect(result.query).to.be('select * from "users" where "age" in (select * from ' +
+					'(select * from "test"));');
 				expect(result.values).to.eql({});
 			});
 

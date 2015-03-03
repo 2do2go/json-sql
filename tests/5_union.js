@@ -131,6 +131,23 @@ describe('Union, except, intersect', function() {
 			expect(result.query).to.be('(select * from "users") intersect all (select * from "vipUsers");');
 			expect(result.values).to.eql({});
 		});
+
+		it('should be ok with `type` = "union" subquery', function() {
+			var result = jsonSql.build({
+				query: {
+					type: 'union',
+					queries: [{
+						table: 'users'
+					}, {
+						table: 'vipUsers'
+					}]
+				}
+			});
+
+			expect(result.query).to.be('select * from ((select * from "users") union (select * ' +
+				'from "vipUsers"));');
+			expect(result.values).to.eql({});
+		});
 	});
 
 	describe('sort', function() {
