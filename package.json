@@ -14,7 +14,7 @@
 		"test": "mocha tests/*.js --reporter spec --bail"
 	},
 	"dependencies": {
-		"underscore": "1.5.2"
+		"underscore": "1.8.2"
 	},
 	"devDependencies": {
 		"mocha": "1.15.1",
