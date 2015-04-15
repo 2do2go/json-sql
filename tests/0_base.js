@@ -2,23 +2,23 @@
 
 var jsonSql = require('../lib')();
 var Builder = require('../lib').Builder;
-var expect = require('expect.js');
+var expect = require('chai').expect;
 
 describe('Builder', function() {
 	it('should have fields', function() {
-		expect(jsonSql).to.be.ok();
-		expect(jsonSql).to.be.a(Builder);
+		expect(jsonSql).to.be.ok;
+		expect(jsonSql).to.be.an.instanceof(Builder);
 
-		expect(jsonSql.dialect).to.be.ok();
+		expect(jsonSql.dialect).to.be.ok;
 
-		expect(jsonSql._query).to.be('');
-		expect(jsonSql._values).to.eql({});
+		expect(jsonSql._query).to.be.equal('');
+		expect(jsonSql._values).to.be.eql({});
 
-		expect(jsonSql.dialect.blocks).to.be.ok();
-		expect(jsonSql.dialect.templates).to.be.ok();
-		expect(jsonSql.dialect.conditions).to.be.ok();
-		expect(jsonSql.dialect.modifiers).to.be.ok();
-		expect(jsonSql.dialect.logicalOperators).to.be.ok();
+		expect(jsonSql.dialect.blocks).to.be.ok;
+		expect(jsonSql.dialect.templates).to.be.ok;
+		expect(jsonSql.dialect.conditions).to.be.ok;
+		expect(jsonSql.dialect.modifiers).to.be.ok;
+		expect(jsonSql.dialect.logicalOperators).to.be.ok;
 	});
 
 	it('should throw error with wrong `type` property', function() {
@@ -26,20 +26,14 @@ describe('Builder', function() {
 			jsonSql.build({
 				type: 'wrong'
 			});
-		}).to.throwError(function(e) {
-			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Unknown template type "wrong"');
-		});
+		}).to.throw('Unknown template type "wrong"');
 	});
 
 	it('should throw error without `table`, `query` and `select` properties', function() {
 		expect(function() {
 			jsonSql.build({});
-		}).to.throwError(function(e) {
-			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Neither `table`, `query`, `select`, `expression` properties ' +
-				'are not set in `select` clause');
-		});
+		}).to.throw('Neither `table`, `query`, `select`, `expression` properties ' +
+			'are not set in `select` clause');
 	});
 
 	it('should throw error with both `table` and `select` properties', function() {
@@ -48,10 +42,7 @@ describe('Builder', function() {
 				table: 'users',
 				select: {table: 'payments'}
 			});
-		}).to.throwError(function(e) {
-			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Wrong using `table`, `select` properties together in `select` clause');
-		});
+		}).to.throw('Wrong using `table`, `select` properties together in `select` clause');
 	});
 
 	it('should throw error with both `table` and `query` properties', function() {
@@ -60,10 +51,7 @@ describe('Builder', function() {
 				table: 'users',
 				query: {table: 'payments'}
 			});
-		}).to.throwError(function(e) {
-			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Wrong using `table`, `query` properties together in `select` clause');
-		});
+		}).to.throw('Wrong using `table`, `query` properties together in `select` clause');
 	});
 
 	it('should throw error with both `query` and `select` properties', function() {
@@ -72,10 +60,7 @@ describe('Builder', function() {
 				query: {table: 'payments'},
 				select: {table: 'payments'}
 			});
-		}).to.throwError(function(e) {
-			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Wrong using `query`, `select` properties together in `select` clause');
-		});
+		}).to.throw('Wrong using `query`, `select` properties together in `select` clause');
 	});
 
 	it('should throw error without `name` property in `with` clause', function() {
@@ -88,10 +73,7 @@ describe('Builder', function() {
 				}],
 				table: 'users'
 			});
-		}).to.throwError(function(e) {
-			expect(e).to.be.a(Error);
-			expect(e.message).to.be('`name` property is not set in `with` clause');
-		});
+		}).to.throw('`name` property is not set in `with` clause');
 	});
 
 	it('should throw error without `query` and `select` properties in `with` clause', function() {
@@ -102,11 +84,7 @@ describe('Builder', function() {
 				}],
 				table: 'users'
 			});
-		}).to.throwError(function(e) {
-			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Neither `query`, `select`, `expression` properties ' +
-				'are not set in `with` clause');
-		});
+		}).to.throw('Neither `query`, `select`, `expression` properties are not set in `with` clause');
 	});
 
 	it('should throw error with both `query` and `select` properties in `with` clause', function() {
@@ -119,10 +97,7 @@ describe('Builder', function() {
 				}],
 				table: 'users'
 			});
-		}).to.throwError(function(e) {
-			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Wrong using `query`, `select` properties together in `with` clause');
-		});
+		}).to.throw('Wrong using `query`, `select` properties together in `with` clause');
 	});
 
 	it('should be ok with array in `with` clause', function() {
@@ -136,9 +111,9 @@ describe('Builder', function() {
 			table: 'users'
 		});
 
-		expect(result.query).to.be('with "payments" as (select * from "payments") select * from ' +
+		expect(result.query).to.be.equal('with "payments" as (select * from "payments") select * from ' +
 			'"users";');
-		expect(result.values).to.eql({});
+		expect(result.values).to.be.eql({});
 	});
 
 	it('should be ok with object in `with` clause', function() {
@@ -153,9 +128,9 @@ describe('Builder', function() {
 			table: 'users'
 		});
 
-		expect(result.query).to.be('with "payments" as (select * from "payments") select * from ' +
+		expect(result.query).to.be.equal('with "payments" as (select * from "payments") select * from ' +
 			'"users";');
-		expect(result.values).to.eql({});
+		expect(result.values).to.be.eql({});
 	});
 
 	it('should create array values with option `namedValues` = false', function() {
@@ -163,15 +138,15 @@ describe('Builder', function() {
 			namedValues: false
 		});
 
-		expect(jsonSql._values).to.eql([]);
+		expect(jsonSql._values).to.be.eql([]);
 
 		var result = jsonSql.build({
 			table: 'users',
 			condition: {name: 'John'}
 		});
 
-		expect(result.query).to.be('select * from "users" where "name" = $1;');
-		expect(result.values).to.eql(['John']);
+		expect(result.query).to.be.equal('select * from "users" where "name" = $1;');
+		expect(result.values).to.be.eql(['John']);
 	});
 
 	it('should use prefix `@` for values with option `valuesPrefix` = @', function() {
@@ -184,8 +159,8 @@ describe('Builder', function() {
 			condition: {name: 'John'}
 		});
 
-		expect(result.query).to.be('select * from "users" where "name" = @p1;');
-		expect(result.values).to.eql({p1: 'John'});
+		expect(result.query).to.be.equal('select * from "users" where "name" = @p1;');
+		expect(result.values).to.be.eql({p1: 'John'});
 	});
 
 	it('should return prefixed values with method `prefixValues`', function() {
@@ -194,9 +169,9 @@ describe('Builder', function() {
 			condition: {name: 'John'}
 		});
 
-		expect(result.query).to.be('select * from "users" where "name" = @p1;');
-		expect(result.values).to.eql({p1: 'John'});
-		expect(result.prefixValues()).to.eql({'@p1': 'John'});
+		expect(result.query).to.be.equal('select * from "users" where "name" = @p1;');
+		expect(result.values).to.be.eql({p1: 'John'});
+		expect(result.prefixValues()).to.be.eql({'@p1': 'John'});
 	});
 
 	it('should return array values with method `getValuesArray`', function() {
@@ -205,9 +180,9 @@ describe('Builder', function() {
 			condition: {name: 'John'}
 		});
 
-		expect(result.query).to.be('select * from "users" where "name" = @p1;');
-		expect(result.values).to.eql({p1: 'John'});
-		expect(result.getValuesArray()).to.eql(['John']);
+		expect(result.query).to.be.equal('select * from "users" where "name" = @p1;');
+		expect(result.values).to.be.eql({p1: 'John'});
+		expect(result.getValuesArray()).to.be.eql(['John']);
 	});
 
 	it('should return object values with method `getValuesObject`', function() {
@@ -216,17 +191,17 @@ describe('Builder', function() {
 			namedValues: false
 		});
 
-		expect(jsonSql._values).to.eql([]);
+		expect(jsonSql._values).to.be.eql([]);
 
 		var result = jsonSql.build({
 			table: 'users',
 			condition: {name: 'John'}
 		});
 
-		expect(result.query).to.be('select * from "users" where "name" = $1;');
-		expect(result.values).to.eql(['John']);
-		expect(result.prefixValues()).to.eql({'$1': 'John'});
-		expect(result.getValuesObject()).to.eql({1: 'John'});
+		expect(result.query).to.be.equal('select * from "users" where "name" = $1;');
+		expect(result.values).to.be.eql(['John']);
+		expect(result.prefixValues()).to.be.eql({'$1': 'John'});
+		expect(result.getValuesObject()).to.be.eql({1: 'John'});
 	});
 
 	it('should create query without values with option `separatedValues` = false', function() {
@@ -234,8 +209,8 @@ describe('Builder', function() {
 			separatedValues: false
 		});
 
-		expect(jsonSql._values).to.not.be.ok();
-		expect(jsonSql._placeholderId).to.not.be.ok();
+		expect(jsonSql._values).to.not.be.ok;
+		expect(jsonSql._placeholderId).to.not.be.ok;
 
 		var result = jsonSql.build({
 			type: 'insert',
@@ -243,8 +218,8 @@ describe('Builder', function() {
 			values: {name: 'John', surname: 'Doe'}
 		});
 
-		expect(result.query).to.be('insert into "users" ("name", "surname") values (\'John\', \'Doe\');');
-		expect(result.values).to.not.be.ok();
+		expect(result.query).to.be.equal('insert into "users" ("name", "surname") values (\'John\', \'Doe\');');
+		expect(result.values).to.not.be.ok;
 	});
 
 	it('should create query without wrapping identifiers with option `wrappedIdentifiers` = false',
@@ -259,7 +234,7 @@ describe('Builder', function() {
 				values: {name: 'John'}
 			});
 
-			expect(result.query).to.be('insert into users (name) values ($p1);');
+			expect(result.query).to.be.equal('insert into users (name) values ($p1);');
 		}
 	);
 
@@ -276,10 +251,7 @@ describe('Builder', function() {
 					'users.a.b': 1
 				}
 			});
-		}).to.throwError(function(e) {
-			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Can\'t wrap identifier with name name "users.a.b"');
-		});
+		}).to.throw('Can\'t wrap identifier with name name "users.a.b"');
 	});
 
 	it('shouldn\'t wrap identifiers twice', function() {
@@ -296,7 +268,7 @@ describe('Builder', function() {
 			}
 		});
 
-		expect(result.query).to.be('insert into "users" ("name", "users"."age") values ($p1, 22);');
+		expect(result.query).to.be.equal('insert into "users" ("name", "users"."age") values ($p1, 22);');
 	});
 
 	it('should wrap identifiers with dots', function() {
@@ -313,6 +285,6 @@ describe('Builder', function() {
 			}
 		});
 
-		expect(result.query).to.be('insert into "users" ("name", "users"."age") values ($p1, 22);');
+		expect(result.query).to.be.equal('insert into "users" ("name", "users"."age") values ($p1, 22);');
 	});
 });

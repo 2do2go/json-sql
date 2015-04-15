@@ -1,7 +1,7 @@
 'use strict';
 
 var jsonSql = require('../lib')();
-var expect = require('expect.js');
+var expect = require('chai').expect;
 
 describe('Insert', function() {
 	it('should throw error without `values` property', function() {
@@ -10,10 +10,7 @@ describe('Insert', function() {
 				type: 'insert',
 				table: 'users'
 			});
-		}).to.throwError(function(e) {
-			expect(e).to.be.a(Error);
-			expect(e.message).to.be('`values` property is not set in `insert` clause');
-		});
+		}).to.throw('`values` property is not set in `insert` clause');
 	});
 
 	it('should be ok with `values` property', function() {
@@ -25,8 +22,8 @@ describe('Insert', function() {
 			}
 		});
 
-		expect(result.query).to.be('insert into "users" ("name") values ($p1);');
-		expect(result.values).to.eql({p1: 'Max'});
+		expect(result.query).to.be.equal('insert into "users" ("name") values ($p1);');
+		expect(result.values).to.be.eql({p1: 'Max'});
 	});
 
 	it('should be ok with `with` property', function() {
@@ -47,11 +44,11 @@ describe('Insert', function() {
 			}
 		});
 
-		expect(result.query).to.be(
+		expect(result.query).to.be.equal(
 			'with "t_1" as (select * from "t_1") insert into "users" ' +
 			'("name", "age", "lastVisit", "active") values ($p1, 17, null, true);'
 		);
-		expect(result.values).to.eql({p1: 'Max'});
+		expect(result.values).to.be.eql({p1: 'Max'});
 	});
 
 	it('should be ok with `returning` property', function() {
@@ -67,10 +64,10 @@ describe('Insert', function() {
 			returning: ['users.*']
 		});
 
-		expect(result.query).to.be(
+		expect(result.query).to.be.equal(
 			'insert into "users" ("name", "age", "lastVisit", "active") ' +
 			'values ($p1, 17, null, true) returning "users".*;'
 		);
-		expect(result.values).to.eql({p1: 'Max'});
+		expect(result.values).to.be.eql({p1: 'Max'});
 	});
 });

@@ -1,7 +1,7 @@
 'use strict';
 
 var jsonSql = require('../lib')();
-var expect = require('expect.js');
+var expect = require('chai').expect;
 
 describe('Union, except, intersect', function() {
 	describe('queries', function() {
@@ -10,10 +10,7 @@ describe('Union, except, intersect', function() {
 				jsonSql.build({
 					type: 'union'
 				});
-			}).to.throwError(function(e) {
-				expect(e).to.be.a(Error);
-				expect(e.message).to.be('`queries` property is not set in `union` clause');
-			});
+			}).to.throw('`queries` property is not set in `union` clause');
 		});
 
 		it('should throw error with non-array value', function() {
@@ -22,10 +19,7 @@ describe('Union, except, intersect', function() {
 					type: 'union',
 					queries: 'wrong'
 				});
-			}).to.throwError(function(e) {
-				expect(e).to.be.a(Error);
-				expect(e.message).to.be('`queries` property should be an array in `union` clause');
-			});
+			}).to.throw('`queries` property should be an array in `union` clause');
 		});
 
 		it('should throw error with value length < 2', function() {
@@ -36,11 +30,7 @@ describe('Union, except, intersect', function() {
 						table: 'users'
 					}]
 				});
-			}).to.throwError(function(e) {
-				expect(e).to.be.a(Error);
-				expect(e.message).to.be('`queries` property should not have length less than 2 in ' +
-					'`union` clause');
-			});
+			}).to.throw('`queries` property should not have length less than 2 in `union` clause');
 		});
 
 		it('should be ok with value length = 2', function() {
@@ -53,8 +43,8 @@ describe('Union, except, intersect', function() {
 				}]
 			});
 
-			expect(result.query).to.be('(select * from "users") union (select * from "vipUsers");');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('(select * from "users") union (select * from "vipUsers");');
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -70,8 +60,8 @@ describe('Union, except, intersect', function() {
 				}]
 			});
 
-			expect(result.query).to.be('(select * from "users") union all (select * from "vipUsers");');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('(select * from "users") union all (select * from "vipUsers");');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `type` = "except"', function() {
@@ -84,8 +74,8 @@ describe('Union, except, intersect', function() {
 				}]
 			});
 
-			expect(result.query).to.be('(select * from "users") except (select * from "vipUsers");');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('(select * from "users") except (select * from "vipUsers");');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `type` = "except", `all` = true', function() {
@@ -99,8 +89,8 @@ describe('Union, except, intersect', function() {
 				}]
 			});
 
-			expect(result.query).to.be('(select * from "users") except all (select * from "vipUsers");');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('(select * from "users") except all (select * from "vipUsers");');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `type` = "intersect"', function() {
@@ -113,8 +103,8 @@ describe('Union, except, intersect', function() {
 				}]
 			});
 
-			expect(result.query).to.be('(select * from "users") intersect (select * from "vipUsers");');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('(select * from "users") intersect (select * from "vipUsers");');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `type` = "intersect", `all` = true', function() {
@@ -128,8 +118,8 @@ describe('Union, except, intersect', function() {
 				}]
 			});
 
-			expect(result.query).to.be('(select * from "users") intersect all (select * from "vipUsers");');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('(select * from "users") intersect all (select * from "vipUsers");');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `type` = "union" subquery', function() {
@@ -144,9 +134,9 @@ describe('Union, except, intersect', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from ((select * from "users") union (select * ' +
+			expect(result.query).to.be.equal('select * from ((select * from "users") union (select * ' +
 				'from "vipUsers"));');
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -162,10 +152,10 @@ describe('Union, except, intersect', function() {
 				sort: 'age'
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'(select * from "users") union (select * from "vipUsers") order by "age";'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with array value', function() {
@@ -179,10 +169,10 @@ describe('Union, except, intersect', function() {
 				sort: ['age', 'gender']
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'(select * from "users") union (select * from "vipUsers") order by "age", "gender";'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object value', function() {
@@ -199,10 +189,10 @@ describe('Union, except, intersect', function() {
 				}
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'(select * from "users") union (select * from "vipUsers") order by "age" asc, "gender" desc;'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -218,10 +208,10 @@ describe('Union, except, intersect', function() {
 				limit: 5
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'(select * from "users") union (select * from "vipUsers") limit 5;'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `offset` property', function() {
@@ -235,10 +225,10 @@ describe('Union, except, intersect', function() {
 				offset: 5
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'(select * from "users") union (select * from "vipUsers") offset 5;'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `limit` and `offset` properties', function() {
@@ -253,10 +243,10 @@ describe('Union, except, intersect', function() {
 				offset: 20
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'(select * from "users") union (select * from "vipUsers") limit 10 offset 20;'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 	});
 });

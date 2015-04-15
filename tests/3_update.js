@@ -1,7 +1,7 @@
 'use strict';
 
 var jsonSql = require('../lib')();
-var expect = require('expect.js');
+var expect = require('chai').expect;
 
 describe('Update', function() {
 	describe('modifier', function() {
@@ -11,10 +11,7 @@ describe('Update', function() {
 					type: 'update',
 					table: 'users'
 				});
-			}).to.throwError(function(e) {
-				expect(e).to.be.a(Error);
-				expect(e.message).to.be('`modifier` property is not set in `update` clause');
-			});
+			}).to.throw('`modifier` property is not set in `update` clause');
 		});
 
 		it('should be ok with default(`$set`)', function() {
@@ -29,9 +26,9 @@ describe('Update', function() {
 				}
 			});
 
-			expect(result.query).to.be('update "users" set "name" = $p1, "age" = 16, "lastVisit" = null, ' +
+			expect(result.query).to.be.equal('update "users" set "name" = $p1, "age" = 16, "lastVisit" = null, ' +
 				'"active" = false;');
-			expect(result.values).to.eql({p1: 'Max'});
+			expect(result.values).to.be.eql({p1: 'Max'});
 		});
 
 		it('should be ok with `$set`', function() {
@@ -45,8 +42,8 @@ describe('Update', function() {
 				}
 			});
 
-			expect(result.query).to.be('update "users" set "name" = $p1;');
-			expect(result.values).to.eql({p1: 'Max'});
+			expect(result.query).to.be.equal('update "users" set "name" = $p1;');
+			expect(result.values).to.be.eql({p1: 'Max'});
 		});
 
 		it('should be ok with `$inc`', function() {
@@ -60,8 +57,8 @@ describe('Update', function() {
 				}
 			});
 
-			expect(result.query).to.be('update "users" set "age" = "age" + 4;');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('update "users" set "age" = "age" + 4;');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `$dec`', function() {
@@ -75,8 +72,8 @@ describe('Update', function() {
 				}
 			});
 
-			expect(result.query).to.be('update "users" set "age" = "age" - 2;');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('update "users" set "age" = "age" - 2;');
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -98,9 +95,9 @@ describe('Update', function() {
 				}
 			});
 
-			expect(result.query).to.be('with "t_1" as (select * from "t_1") update "users" ' +
+			expect(result.query).to.be.equal('with "t_1" as (select * from "t_1") update "users" ' +
 				'set "age" = "age" - 3;');
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -117,10 +114,10 @@ describe('Update', function() {
 				returning: ['users.*']
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'update "users" set "age" = "age" - 3 returning "users".*;'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 	});
 });

@@ -1,7 +1,7 @@
 'use strict';
 
 var jsonSql = require('../lib')();
-var expect = require('expect.js');
+var expect = require('chai').expect;
 
 describe('Delete', function() {
 	it('should be ok without `condition` property', function() {
@@ -10,8 +10,8 @@ describe('Delete', function() {
 			table: 'users'
 		});
 
-		expect(result.query).to.be('delete from "users";');
-		expect(result.values).to.eql({});
+		expect(result.query).to.be.equal('delete from "users";');
+		expect(result.values).to.be.eql({});
 	});
 
 	it('should be ok with `condition` property', function() {
@@ -23,8 +23,8 @@ describe('Delete', function() {
 			}
 		});
 
-		expect(result.query).to.be('delete from "users" where "a" = 5;');
-		expect(result.values).to.eql({});
+		expect(result.query).to.be.equal('delete from "users" where "a" = 5;');
+		expect(result.values).to.be.eql({});
 	});
 
 	it('should be ok with `with` property', function() {
@@ -39,8 +39,8 @@ describe('Delete', function() {
 			table: 'users'
 		});
 
-		expect(result.query).to.be('with "t_1" as (select * from "t_1") delete from "users";');
-		expect(result.values).to.eql({});
+		expect(result.query).to.be.equal('with "t_1" as (select * from "t_1") delete from "users";');
+		expect(result.values).to.be.eql({});
 	});
 
 	it('should be ok with `returning` property', function() {
@@ -50,9 +50,9 @@ describe('Delete', function() {
 			returning: ['users.*']
 		});
 
-		expect(result.query).to.be(
+		expect(result.query).to.be.equal(
 			'delete from "users" returning "users".*;'
 		);
-		expect(result.values).to.eql({});
+		expect(result.values).to.be.eql({});
 	});
 });

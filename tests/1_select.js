@@ -1,7 +1,7 @@
 'use strict';
 
 var jsonSql = require('../lib')();
-var expect = require('expect.js');
+var expect = require('chai').expect;
 
 describe('Select', function() {
 	describe('type', function() {
@@ -10,8 +10,8 @@ describe('Select', function() {
 				table: 'users'
 			});
 
-			expect(result.query).to.be('select * from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select * from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with "select" value', function() {
@@ -20,8 +20,8 @@ describe('Select', function() {
 				table: 'users'
 			});
 
-			expect(result.query).to.be('select * from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select * from "users";');
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -32,8 +32,8 @@ describe('Select', function() {
 				distinct: true
 			});
 
-			expect(result.query).to.be('select distinct * from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select distinct * from "users";');
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -44,8 +44,8 @@ describe('Select', function() {
 				fields: ['name', 'type']
 			});
 
-			expect(result.query).to.be('select "name", "type" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select "name", "type" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`name`: `alias`, ...)', function() {
@@ -54,8 +54,8 @@ describe('Select', function() {
 				fields: {userAge: 'age', userScore: 'score'}
 			});
 
-			expect(result.query).to.be('select "userAge" as "age", "userScore" as "score" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select "userAge" as "age", "userScore" as "score" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with array of objects(`name`: `alias`, ...)', function() {
@@ -64,8 +64,8 @@ describe('Select', function() {
 				fields: [{userAge: 'age'}]
 			});
 
-			expect(result.query).to.be('select "userAge" as "age" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select "userAge" as "age" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`field`) array', function() {
@@ -74,8 +74,8 @@ describe('Select', function() {
 				fields: [{field: 'address'}]
 			});
 
-			expect(result.query).to.be('select "address" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select "address" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`field`, `table`) array', function() {
@@ -84,8 +84,8 @@ describe('Select', function() {
 				fields: [{field: 'score', table: 'users'}]
 			});
 
-			expect(result.query).to.be('select "users"."score" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select "users"."score" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`field`, `alias`) array', function() {
@@ -94,8 +94,8 @@ describe('Select', function() {
 				fields: [{field: 'zoneName', alias: 'zone'}]
 			});
 
-			expect(result.query).to.be('select "zoneName" as "zone" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select "zoneName" as "zone" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`field`, `table`, `alias`) array', function() {
@@ -104,8 +104,8 @@ describe('Select', function() {
 				fields: [{field: 'zoneName', table: 'users', alias: 'zone'}]
 			});
 
-			expect(result.query).to.be('select "users"."zoneName" as "zone" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select "users"."zoneName" as "zone" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`table`)', function() {
@@ -114,8 +114,8 @@ describe('Select', function() {
 				fields: {score: {table: 'users'}}
 			});
 
-			expect(result.query).to.be('select "users"."score" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select "users"."score" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`field`, `alias`)', function() {
@@ -124,8 +124,8 @@ describe('Select', function() {
 				fields: {zone: {field: 'zone_1', alias: 'zone'}}
 			});
 
-			expect(result.query).to.be('select "zone_1" as "zone" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select "zone_1" as "zone" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`table`, `alias`)', function() {
@@ -134,8 +134,8 @@ describe('Select', function() {
 				fields: {score: {table: 'users', alias: 's'}}
 			});
 
-			expect(result.query).to.be('select "users"."score" as "s" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select "users"."score" as "s" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`field`, `table`, `alias`)', function() {
@@ -144,8 +144,8 @@ describe('Select', function() {
 				fields: {name: {field: 'name_1', table: 'users', alias: 'name_2'}}
 			});
 
-			expect(result.query).to.be('select "users"."name_1" as "name_2" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select "users"."name_1" as "name_2" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`expression`)', function() {
@@ -156,8 +156,8 @@ describe('Select', function() {
 				}]
 			});
 
-			expect(result.query).to.be('select count(*) from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select count(*) from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`expression`, `alias`)', function() {
@@ -169,8 +169,8 @@ describe('Select', function() {
 				}]
 			});
 
-			expect(result.query).to.be('select count(*) as "count" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select count(*) as "count" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`expression`, `field`, `alias`)', function() {
@@ -183,8 +183,8 @@ describe('Select', function() {
 				}]
 			});
 
-			expect(result.query).to.be('select sum("income") as "sum" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select sum("income") as "sum" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object(`expression`[], `field`, `alias`)', function() {
@@ -197,8 +197,8 @@ describe('Select', function() {
 				}]
 			});
 
-			expect(result.query).to.be('select abs(sum("income")) as "sum" from "users";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select abs(sum("income")) as "sum" from "users";');
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -209,8 +209,8 @@ describe('Select', function() {
 				alias: 'u'
 			});
 
-			expect(result.query).to.be('select * from "users" as "u";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select * from "users" as "u";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should throw error if object `alias` does not have `name` property', function() {
@@ -219,10 +219,7 @@ describe('Select', function() {
 					table: 'users',
 					alias: {}
 				});
-			}).to.throwError(function(e) {
-				expect(e).to.be.an(Error);
-				expect(e.message).to.be('Alias `name` property is required');
-			});
+			}).to.throw('Alias `name` property is required');
 		});
 
 		it('should be ok with object `alias`(`name`) property', function() {
@@ -233,8 +230,8 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from "users" as "u";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select * from "users" as "u";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object `alias`(`name`, `columns`) property', function() {
@@ -246,8 +243,8 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from "users" as "u"("a", "b");');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select * from "users" as "u"("a", "b");');
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -260,8 +257,8 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from (select * from "t");');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select * from (select * from "t");');
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -273,8 +270,8 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from (select * from "t");');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select * from (select * from "t");');
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -284,8 +281,8 @@ describe('Select', function() {
 				expression: 'function()'
 			});
 
-			expect(result.query).to.be('select * from function();');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select * from function();');
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -297,11 +294,8 @@ describe('Select', function() {
 						table: 'users',
 						join: [{}]
 					});
-				}).to.throwError(function(e) {
-					expect(e).to.be.a(Error);
-					expect(e.message).to.be('Neither `table`, `query`, `select`, `expression` properties ' +
-						'are not set in `join` clause');
-				});
+				}).to.throw('Neither `table`, `query`, `select`, `expression` properties ' +
+					'are not set in `join` clause');
 			}
 		);
 
@@ -314,10 +308,7 @@ describe('Select', function() {
 						select: {table: 'b'}
 					}]
 				});
-			}).to.throwError(function(e) {
-				expect(e).to.be.a(Error);
-				expect(e.message).to.be('Wrong using `table`, `select` properties together in `join` clause');
-			});
+			}).to.throw('Wrong using `table`, `select` properties together in `join` clause');
 		});
 
 		it('should throw error with both `table` and `query` properties', function() {
@@ -329,10 +320,7 @@ describe('Select', function() {
 						query: {table: 'b'}
 					}]
 				});
-			}).to.throwError(function(e) {
-				expect(e).to.be.a(Error);
-				expect(e.message).to.be('Wrong using `table`, `query` properties together in `join` clause');
-			});
+			}).to.throw('Wrong using `table`, `query` properties together in `join` clause');
 		});
 
 		it('should throw error with both `query` and `select` properties', function() {
@@ -344,10 +332,7 @@ describe('Select', function() {
 						select: {table: 'b'}
 					}]
 				});
-			}).to.throwError(function(e) {
-				expect(e).to.be.a(Error);
-				expect(e.message).to.be('Wrong using `query`, `select` properties together in `join` clause');
-			});
+			}).to.throw('Wrong using `query`, `select` properties together in `join` clause');
 		});
 
 		it('should throw error with wrong `type` property', function() {
@@ -359,10 +344,7 @@ describe('Select', function() {
 						table: 'payments'
 					}]
 				});
-			}).to.throwError(function(e) {
-				expect(e).to.be.a(Error);
-				expect(e.message).to.be('Invalid `type` property value "wrong" in `join` clause');
-			});
+			}).to.throw('Invalid `type` property value "wrong" in `join` clause');
 		});
 
 		it('should be ok with correct `type` property', function() {
@@ -374,8 +356,8 @@ describe('Select', function() {
 				}]
 			});
 
-			expect(result.query).to.be('select * from "users" left outer join "payments";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select * from "users" left outer join "payments";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with array `join`', function() {
@@ -386,8 +368,8 @@ describe('Select', function() {
 				}]
 			});
 
-			expect(result.query).to.be('select * from "users" join "payments";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select * from "users" join "payments";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object `join`', function() {
@@ -398,8 +380,8 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from "users" join "payments";');
-			expect(result.values).to.eql({});
+			expect(result.query).to.be.equal('select * from "users" join "payments";');
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `on` property', function() {
@@ -412,9 +394,9 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be('select * from "users" join "payments" on "users"."name" = ' +
+			expect(result.query).to.be.equal('select * from "users" join "payments" on "users"."name" = ' +
 				'"payments"."name";');
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `query` property', function() {
@@ -428,12 +410,12 @@ describe('Select', function() {
 				}]
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'select * from "users" ' +
 					'join (select * from "payments") ' +
 					'on "users"."name" = "payments"."name";'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `select` property', function() {
@@ -447,12 +429,12 @@ describe('Select', function() {
 				}]
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'select * from "users" ' +
 					'join (select * from "payments") ' +
 					'on "users"."name" = "payments"."name";'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -466,10 +448,7 @@ describe('Select', function() {
 							name: {$wrong: 'John'}
 						}
 					});
-				}).to.throwError(function(e) {
-					expect(e).to.be.a(Error);
-					expect(e.message).to.be('Unknown operator "$wrong"');
-				});
+				}).to.throw('Unknown operator "$wrong"');
 			});
 
 			it('should be ok with default operator(=)', function() {
@@ -480,8 +459,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" = $p1;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" = $p1;');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -494,8 +473,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" = $p1;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" = $p1;');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -508,8 +487,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" != $p1;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" != $p1;');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -522,8 +501,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" > $p1;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" > $p1;');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -536,8 +515,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" < $p1;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" < $p1;');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -550,8 +529,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" >= $p1;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" >= $p1;');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -564,8 +543,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" <= $p1;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" <= $p1;');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -578,8 +557,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" is null;');
-				expect(result.values).to.eql({});
+				expect(result.query).to.be.equal('select * from "users" where "name" is null;');
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should be ok with `$isnot` operator', function() {
@@ -590,8 +569,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" is not null;');
-				expect(result.values).to.eql({});
+				expect(result.query).to.be.equal('select * from "users" where "name" is not null;');
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should be ok with `$like` operator', function() {
@@ -602,8 +581,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" like $p1;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" like $p1;');
+				expect(result.values).to.be.eql({
 					p1: 'John%'
 				});
 			});
@@ -616,8 +595,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" is null;');
-				expect(result.values).to.eql({});
+				expect(result.query).to.be.equal('select * from "users" where "name" is null;');
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should be ok with `$null`:false operator', function() {
@@ -628,8 +607,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" is not null;');
-				expect(result.values).to.eql({});
+				expect(result.query).to.be.equal('select * from "users" where "name" is not null;');
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should be ok with `$field` operator', function() {
@@ -640,8 +619,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" = "name_2";');
-				expect(result.values).to.eql({});
+				expect(result.query).to.be.equal('select * from "users" where "name" = "name_2";');
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should be ok with object `$field` operator', function() {
@@ -652,8 +631,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" = "name_2";');
-				expect(result.values).to.eql({});
+				expect(result.query).to.be.equal('select * from "users" where "name" = "name_2";');
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should be ok with `$in` operator', function() {
@@ -664,8 +643,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "age" in (12, 13, 14);');
-				expect(result.values).to.eql({});
+				expect(result.query).to.be.equal('select * from "users" where "age" in (12, 13, 14);');
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should add `null` value with empty array in `$in` operator', function() {
@@ -676,8 +655,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "age" in (null);');
-				expect(result.values).to.eql({});
+				expect(result.query).to.be.equal('select * from "users" where "age" in (null);');
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should be ok with `$nin` operator', function() {
@@ -688,8 +667,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "age" not in (12, 13, 14);');
-				expect(result.values).to.eql({});
+				expect(result.query).to.be.equal('select * from "users" where "age" not in (12, 13, 14);');
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should add `null` value with empty array in `$nin` operator', function() {
@@ -700,8 +679,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "age" not in (null);');
-				expect(result.values).to.eql({});
+				expect(result.query).to.be.equal('select * from "users" where "age" not in (null);');
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should be ok with object subquery in `$in` operator', function() {
@@ -714,8 +693,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "age" in (select * from "test");');
-				expect(result.values).to.eql({});
+				expect(result.query).to.be.equal('select * from "users" where "age" in (select * from "test");');
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should be ok with `query` subquery in `$in` operator', function() {
@@ -730,9 +709,9 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "age" in (select * from ' +
+				expect(result.query).to.be.equal('select * from "users" where "age" in (select * from ' +
 					'(select * from "test"));');
-				expect(result.values).to.eql({});
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should be ok with `select` subquery in `$in` operator', function() {
@@ -747,9 +726,9 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "age" in (select * from ' +
+				expect(result.query).to.be.equal('select * from "users" where "age" in (select * from ' +
 					'(select * from "test"));');
-				expect(result.values).to.eql({});
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should be ok with `$between` operator', function() {
@@ -760,8 +739,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "age" between 12 and 14;');
-				expect(result.values).to.eql({});
+				expect(result.query).to.be.equal('select * from "users" where "age" between 12 and 14;');
+				expect(result.values).to.be.eql({});
 			});
 		});
 
@@ -777,10 +756,7 @@ describe('Select', function() {
 							]
 						}
 					});
-				}).to.throwError(function(e) {
-					expect(e).to.be.a(Error);
-					expect(e.message).to.be('Unknown logical operator "$wrong"');
-				});
+				}).to.throw('Unknown logical operator "$wrong"');
 			});
 
 			it('should be ok with default logical operator(`$and`)', function() {
@@ -792,8 +768,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" = $p1 and "age" = 12;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" = $p1 and "age" = 12;');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -810,9 +786,9 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "age" > 5 and "age" < 15 and ' +
+				expect(result.query).to.be.equal('select * from "users" where "age" > 5 and "age" < 15 and ' +
 					'"age" != 10;');
-				expect(result.values).to.eql({});
+				expect(result.values).to.be.eql({});
 			});
 
 			it('should be ok with array `$and`', function() {
@@ -826,8 +802,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" = $p1 and "age" = 12;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" = $p1 and "age" = 12;');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -843,8 +819,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" = $p1 and "age" = 12;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" = $p1 and "age" = 12;');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -860,8 +836,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" = $p1 or "age" = 12;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" = $p1 or "age" = 12;');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -877,8 +853,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where "name" = $p1 or "age" = 12;');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where "name" = $p1 or "age" = 12;');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -894,8 +870,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where not ("name" = $p1 and "age" = 12);');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where not ("name" = $p1 and "age" = 12);');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -911,8 +887,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be('select * from "users" where not ("name" = $p1 and "age" = 12);');
-				expect(result.values).to.eql({
+				expect(result.query).to.be.equal('select * from "users" where not ("name" = $p1 and "age" = 12);');
+				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
 			});
@@ -933,12 +909,12 @@ describe('Select', function() {
 					}]
 				});
 
-				expect(result.query).to.be(
+				expect(result.query).to.be.equal(
 					'select * from "users" ' +
 						'where ("name" = $p1 or "age" = 12) and ' +
 						'("name" = $p2 or "age" = 14);'
 				);
-				expect(result.values).to.eql({
+				expect(result.values).to.be.eql({
 					p1: 'John',
 					p2: 'Mark'
 				});
@@ -962,12 +938,12 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be(
+				expect(result.query).to.be.equal(
 					'select * from "users" ' +
 						'where ("name" = $p1 or "age" = 12) and ' +
 						'("name" = $p2 or "age" = 14);'
 				);
-				expect(result.values).to.eql({
+				expect(result.values).to.be.eql({
 					p1: 'John',
 					p2: 'Mark'
 				});
@@ -987,12 +963,12 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be(
+				expect(result.query).to.be.equal(
 					'select * from "users" ' +
 						'where ("name" = $p1 and "age" = 12) or ' +
 						'("name" = $p2 and "age" = 14);'
 				);
-				expect(result.values).to.eql({
+				expect(result.values).to.be.eql({
 					p1: 'John',
 					p2: 'Mark'
 				});
@@ -1016,12 +992,12 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be(
+				expect(result.query).to.be.equal(
 					'select * from "users" ' +
 						'where ("name" = $p1 and "age" = 12) or ' +
 						'("name" = $p2 and "age" = 14);'
 				);
-				expect(result.values).to.eql({
+				expect(result.values).to.be.eql({
 					p1: 'John',
 					p2: 'Mark'
 				});
@@ -1039,11 +1015,11 @@ describe('Select', function() {
 					}]
 				});
 
-				expect(result.query).to.be(
+				expect(result.query).to.be.equal(
 					'select * from "users" ' +
 						'where ("name" = $p1 and "age" = 12) and ' +
 						'("name" = $p2 and "age" = 14);');
-				expect(result.values).to.eql({
+				expect(result.values).to.be.eql({
 					p1: 'John',
 					p2: 'Mark'
 				});
@@ -1063,12 +1039,12 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be(
+				expect(result.query).to.be.equal(
 					'select * from "users" ' +
 						'where ("name" = $p1 and "age" = 12) and ' +
 						'("name" = $p2 and "age" = 14);'
 				);
-				expect(result.values).to.eql({
+				expect(result.values).to.be.eql({
 					p1: 'John',
 					p2: 'Mark'
 				});
@@ -1092,12 +1068,12 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be(
+				expect(result.query).to.be.equal(
 					'select * from "users" ' +
 						'where ("name" = $p1 and "age" = 12) and ' +
 						'("name" = $p2 and "age" = 14);'
 				);
-				expect(result.values).to.eql({
+				expect(result.values).to.be.eql({
 					p1: 'John',
 					p2: 'Mark'
 				});
@@ -1121,12 +1097,12 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be(
+				expect(result.query).to.be.equal(
 					'select * from "users" ' +
 						'where ("name" = $p1 or "age" = 12) or ' +
 						'("name" = $p2 or "age" = 14);'
 				);
-				expect(result.values).to.eql({
+				expect(result.values).to.be.eql({
 					p1: 'John',
 					p2: 'Mark'
 				});
@@ -1141,10 +1117,10 @@ describe('Select', function() {
 				group: 'age'
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'select * from "users" group by "age";'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with array value', function() {
@@ -1153,10 +1129,10 @@ describe('Select', function() {
 				group: ['age', 'gender']
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'select * from "users" group by "age", "gender";'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -1167,10 +1143,10 @@ describe('Select', function() {
 				sort: 'age'
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'select * from "users" order by "age";'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with array value', function() {
@@ -1179,10 +1155,10 @@ describe('Select', function() {
 				sort: ['age', 'gender']
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'select * from "users" order by "age", "gender";'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with object value', function() {
@@ -1194,10 +1170,10 @@ describe('Select', function() {
 				}
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'select * from "users" order by "age" asc, "gender" desc;'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 	});
 
@@ -1208,10 +1184,10 @@ describe('Select', function() {
 				limit: 5
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'select * from "users" limit 5;'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `offset` property', function() {
@@ -1220,10 +1196,10 @@ describe('Select', function() {
 				offset: 5
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'select * from "users" offset 5;'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 
 		it('should be ok with `limit` and `offset` properties', function() {
@@ -1233,10 +1209,10 @@ describe('Select', function() {
 				offset: 20
 			});
 
-			expect(result.query).to.be(
+			expect(result.query).to.be.equal(
 				'select * from "users" limit 10 offset 20;'
 			);
-			expect(result.values).to.eql({});
+			expect(result.values).to.be.eql({});
 		});
 	});
 });
