@@ -131,7 +131,7 @@ $ npm install
 run tests
 
 ``` bash
-$ npm test
+$ gulp test
 ```
 
 ## License
