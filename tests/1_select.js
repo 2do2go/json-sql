@@ -203,13 +203,64 @@ describe('Select', function() {
 	});
 
 	describe('alias', function() {
-		it('should be ok with `alias` property', function() {
+		it('should be ok with string `alias` property', function() {
 			var result = jsonSql.build({
 				table: 'users',
 				alias: 'u'
 			});
 
 			expect(result.query).to.be('select * from "users" as "u";');
+			expect(result.values).to.eql({});
+		});
+
+		it('should throw error if object `alias` does not have `name` property', function() {
+			expect(function() {
+				jsonSql.build({
+					table: 'users',
+					alias: {}
+				});
+			}).to.throwError(function(e) {
+				expect(e).to.be.an(Error);
+				expect(e.message).to.be('Alias `name` property is required');
+			});
+		});
+
+		it('should be ok with object `alias`(`name`) property', function() {
+			var result = jsonSql.build({
+				table: 'users',
+				alias: {
+					name: 'u'
+				}
+			});
+
+			expect(result.query).to.be('select * from "users" as "u";');
+			expect(result.values).to.eql({});
+		});
+
+		it('should be ok with object `alias`(`name`, `columns`) property', function() {
+			var result = jsonSql.build({
+				table: 'users',
+				alias: {
+					name: 'u',
+					columns: ['a', 'b']
+				}
+			});
+
+			expect(result.query).to.be('select * from "users" as "u"("a", "b");');
+			expect(result.values).to.eql({});
+		});
+	});
+
+	describe('query', function() {
+		it('should be ok with `query` property', function() {
+			var result = jsonSql.build({
+				query: {
+					type: 'select',
+					table: 't'
+				}
+			});
+
+			expect(result.query).to.be('select * from (select * from "t");');
 			expect(result.values).to.eql({});
 		});
 	});
@@ -227,6 +278,17 @@ describe('Select', function() {
 		});
 	});
 
+	describe('expression', function() {
+		it('should be ok with `expression` property', function() {
+			var result = jsonSql.build({
+				expression: 'function()'
+			});
+
+			expect(result.query).to.be('select * from function();');
+			expect(result.values).to.eql({});
+		});
+	});
+
 	describe('join', function() {
 		it('should throw error without `table`, `query` and `select` properties',
 			function() {
@@ -237,8 +299,8 @@ describe('Select', function() {
 					});
 				}).to.throwError(function(e) {
 					expect(e).to.be.a(Error);
-					expect(e.message).to.be('Neither `table`, `query`, `select` properties are not set in ' +
-						'`join` clause');
+					expect(e.message).to.be('Neither `table`, `query`, `select`, `expression` properties ' +
+						'are not set in `join` clause');
 				});
 			}
 		);

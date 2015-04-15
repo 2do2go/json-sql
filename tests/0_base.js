@@ -37,8 +37,8 @@ describe('Builder', function() {
 			jsonSql.build({});
 		}).to.throwError(function(e) {
 			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Neither `table`, `query`, `select` properties are not set in ' +
-				'`select` clause');
+			expect(e.message).to.be('Neither `table`, `query`, `select`, `expression` properties ' +
+				'are not set in `select` clause');
 		});
 	});
 
@@ -104,7 +104,8 @@ describe('Builder', function() {
 			});
 		}).to.throwError(function(e) {
 			expect(e).to.be.a(Error);
-			expect(e.message).to.be('Neither `query`, `select` properties are not set in `with` clause');
+			expect(e.message).to.be('Neither `query`, `select`, `expression` properties ' +
+				'are not set in `with` clause');
 		});
 	});
 
