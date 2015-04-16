@@ -1,32 +1,19 @@
 {
     "node": true,
-    "newcap": false,
-    "supernew": false,
+    "freeze": true,
     "maxlen": 100,
     "smarttabs": true,
     "indent": 1,
-    "globalstrict": true,
+    "quotmark": "single",
     "strict": true,
+    "globalstrict": true,
     // use es3 to get 'extra comma' at object literal error
     "es3": true,
-    // suppress warnings about switches with just one case
-    "onecase": true,
-    "nonew": false,
-    "trailing": true,
-    "sub": false,
-    "loopfunc": true,
-    "boss": false,
-    "lastsemic": false,
-    "quotmark": "single",
     "undef": true,
+    "unused": true,
     "immed": true,
-    // allows ECMAScript 6 syntax (generators, etc)
-    "esnext": true,
-    // allow generators without a yield
-    "noyield": true,
+    "eqeqeq": true,
     "globals": {
-        "describe": false,
-        "it": false,
-        "before": false
+        "JSON": false
     }
 }

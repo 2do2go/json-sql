@@ -251,7 +251,7 @@ describe('Builder', function() {
 					'users.a.b': 1
 				}
 			});
-		}).to.throw('Can\'t wrap identifier with name name "users.a.b"');
+		}).to.throw('Identifier "users.a.b" contains more than one dot');
 	});
 
 	it('shouldn\'t wrap identifiers twice', function() {
