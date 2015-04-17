@@ -218,7 +218,8 @@ describe('Builder', function() {
 			values: {name: 'John', surname: 'Doe'}
 		});
 
-		expect(result.query).to.be.equal('insert into "users" ("name", "surname") values (\'John\', \'Doe\');');
+		expect(result.query).to.be.equal('insert into "users" ("name", "surname") values ' +
+			'(\'John\', \'Doe\');');
 		expect(result.values).to.not.be.ok;
 	});
 
@@ -238,23 +239,7 @@ describe('Builder', function() {
 		}
 	);
 
-	it('should throw error if identifier contains more than one dot', function() {
-		jsonSql.configure({
-			wrappedIdentifiers: true
-		});
-
-		expect(function() {
-			jsonSql.build({
-				type: 'insert',
-				table: '"users"',
-				values: {
-					'users.a.b': 1
-				}
-			});
-		}).to.throw('Identifier "users.a.b" contains more than one dot');
-	});
-
-	it('shouldn\'t wrap identifiers twice', function() {
+	it('shouldn\'t wrap identifiers that already wrapped', function() {
 		jsonSql.configure({
 			wrappedIdentifiers: true
 		});
@@ -271,7 +256,36 @@ describe('Builder', function() {
 		expect(result.query).to.be.equal('insert into "users" ("name", "users"."age") values ($p1, 22);');
 	});
 
-	it('should wrap identifiers with dots', function() {
+	it('shouldn\'t split identifiers by dots inside quotes', function() {
+		jsonSql.configure({
+			wrappedIdentifiers: true
+		});
+
+		var result = jsonSql.build({
+			type: 'insert',
+			table: '"users"',
+			values: {
+				'"users.age"': 22
+			}
+		});
+
+		expect(result.query).to.be.equal('insert into "users" ("users.age") values (22);');
+	});
+
+	it('shouldn\'t wrap asterisk identifier parts', function() {
+		jsonSql.configure({
+			wrappedIdentifiers: true
+		});
+
+		var result = jsonSql.build({
+			fields: ['users.*'],
+			table: '"users"'
+		});
+
+		expect(result.query).to.be.equal('select "users".* from "users";');
+	});
+
+	it('should split identifiers by dots and wrap each part', function() {
 		jsonSql.configure({
 			wrappedIdentifiers: true
 		});

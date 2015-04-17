@@ -19,3 +19,9 @@ gulp.task('lint', function() {
 		.pipe(jshint())
 		.pipe(jshint.reporter('unix'));
 });
+
+gulp.task('lintTests', function() {
+	return gulp.src('./tests/*.js')
+		.pipe(jshint())
+		.pipe(jshint.reporter('unix'));
+});

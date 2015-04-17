@@ -54,7 +54,8 @@ describe('Select', function() {
 				fields: {userAge: 'age', userScore: 'score'}
 			});
 
-			expect(result.query).to.be.equal('select "userAge" as "age", "userScore" as "score" from "users";');
+			expect(result.query).to.be.equal('select "userAge" as "age", "userScore" as "score" from ' +
+				'"users";');
 			expect(result.values).to.be.eql({});
 		});
 
@@ -693,7 +694,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be.equal('select * from "users" where "age" in (select * from "test");');
+				expect(result.query).to.be.equal('select * from "users" where "age" in (select * from ' +
+					'"test");');
 				expect(result.values).to.be.eql({});
 			});
 
@@ -870,7 +872,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be.equal('select * from "users" where not ("name" = $p1 and "age" = 12);');
+				expect(result.query).to.be.equal('select * from "users" where not ("name" = $p1 and ' +
+					'"age" = 12);');
 				expect(result.values).to.be.eql({
 					p1: 'John'
 				});
@@ -887,7 +890,8 @@ describe('Select', function() {
 					}
 				});
 
-				expect(result.query).to.be.equal('select * from "users" where not ("name" = $p1 and "age" = 12);');
+				expect(result.query).to.be.equal('select * from "users" where not ("name" = $p1 and ' +
+					'"age" = 12);');
 				expect(result.values).to.be.eql({
 					p1: 'John'
 				});

@@ -60,7 +60,8 @@ describe('Union, except, intersect', function() {
 				}]
 			});
 
-			expect(result.query).to.be.equal('(select * from "users") union all (select * from "vipUsers");');
+			expect(result.query).to.be.equal('(select * from "users") union all (select * from ' +
+				'"vipUsers");');
 			expect(result.values).to.be.eql({});
 		});
 
@@ -89,7 +90,8 @@ describe('Union, except, intersect', function() {
 				}]
 			});
 
-			expect(result.query).to.be.equal('(select * from "users") except all (select * from "vipUsers");');
+			expect(result.query).to.be.equal('(select * from "users") except all (select * from ' +
+				'"vipUsers");');
 			expect(result.values).to.be.eql({});
 		});
 
@@ -103,7 +105,8 @@ describe('Union, except, intersect', function() {
 				}]
 			});
 
-			expect(result.query).to.be.equal('(select * from "users") intersect (select * from "vipUsers");');
+			expect(result.query).to.be.equal('(select * from "users") intersect (select * from ' +
+				'"vipUsers");');
 			expect(result.values).to.be.eql({});
 		});
 
@@ -118,7 +121,8 @@ describe('Union, except, intersect', function() {
 				}]
 			});
 
-			expect(result.query).to.be.equal('(select * from "users") intersect all (select * from "vipUsers");');
+			expect(result.query).to.be.equal('(select * from "users") intersect all (select * from ' +
+				'"vipUsers");');
 			expect(result.values).to.be.eql({});
 		});
 
