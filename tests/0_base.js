@@ -133,6 +133,61 @@ describe('Builder', function() {
 		expect(result.values).to.be.eql({});
 	});
 
+	it('should throw error with both `with` and `withRecursive` clauses', function() {
+		expect(function() {
+			jsonSql.build({
+				'with': {
+					payments: {
+						select: {
+							table: 'payments'
+						}
+					}
+				},
+				withRecursive: {
+					phones: {
+						select: {
+							table: 'phones'
+						}
+					}
+				},
+				table: 'users'
+			});
+		}).to.throw('Wrong using `with`, `withRecursive` properties together in `select` clause');
+	});
+
+	it('should be ok with array in `withRecursive` clause', function() {
+		var result = jsonSql.build({
+			withRecursive: [{
+				name: 'payments',
+				select: {
+					table: 'payments'
+				}
+			}],
+			table: 'users'
+		});
+
+		expect(result.query).to.be.equal('with recursive "payments" as (select * from "payments") ' +
+			'select * from "users";');
+		expect(result.values).to.be.eql({});
+	});
+
+	it('should be ok with object in `withRecursive` clause', function() {
+		var result = jsonSql.build({
+			withRecursive: {
+				payments: {
+					select: {
+						table: 'payments'
+					}
+				}
+			},
+			table: 'users'
+		});
+
+		expect(result.query).to.be.equal('with recursive "payments" as (select * from "payments") ' +
+			'select * from "users";');
+		expect(result.values).to.be.eql({});
+	});
+
 	it('should create array values with option `namedValues` = false', function() {
 		jsonSql.configure({
 			namedValues: false
