@@ -44,15 +44,15 @@ describe('PostgreSQL dialect', function() {
 				table: 'test',
 				condition: {
 					'params->a': {
-						$jsonIn: {$field: 'data->b'}
+						$jsonIn: {b: 1}
 					}
 				}
 			});
 
 			expect(result.query).to.be.equal(
-				'select * from "test" where "params"->\'a\' <@ "data"->\'b\';'
+				'select * from "test" where "params"->\'a\' <@ $1;'
 			);
-			expect(result.values).to.be.eql([]);
+			expect(result.values).to.be.eql(['{"b":1}']);
 		});
 
 		it('should be ok with `$jsonHas` conditional operator', function() {

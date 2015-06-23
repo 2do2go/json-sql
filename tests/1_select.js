@@ -201,6 +201,43 @@ describe('Select', function() {
 			expect(result.query).to.be.equal('select abs(sum("income")) as "sum" from "users";');
 			expect(result.values).to.be.eql({});
 		});
+
+		it('should be ok with object(`select`)', function() {
+			var result = jsonSql.build({
+				table: 'users',
+				fields: [{
+					select: {
+						fields: [{
+							expression: 'min',
+							field: 'age'
+						}],
+						table: 'users'
+					}
+				}]
+			});
+
+			expect(result.query).to.be.equal('select (select min("age") from "users") from "users";');
+			expect(result.values).to.be.eql({});
+		});
+
+		it('should be ok with object(`query`)', function() {
+			var result = jsonSql.build({
+				table: 'users',
+				fields: [{
+					query: {
+						type: 'select',
+						fields: [{
+							expression: 'min',
+							field: 'age'
+						}],
+						table: 'users'
+					}
+				}]
+			});
+
+			expect(result.query).to.be.equal('select (select min("age") from "users") from "users";');
+			expect(result.values).to.be.eql({});
+		});
 	});
 
 	describe('alias', function() {
