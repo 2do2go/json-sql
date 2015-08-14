@@ -22,6 +22,7 @@
   "devDependencies": {
     "chai": "2.2.0",
     "gulp": "^3.8.11",
+    "gulp-istanbul": "^0.10.0",
     "gulp-jshint": "^1.10.0",
     "gulp-mocha": "^2.0.1"
   },

@@ -16,9 +16,12 @@ describe('Builder', function() {
 
 		expect(jsonSql.dialect.blocks).to.be.ok;
 		expect(jsonSql.dialect.templates).to.be.ok;
-		expect(jsonSql.dialect.conditions).to.be.ok;
+		expect(jsonSql.dialect.operators).to.be.ok;
+		expect(jsonSql.dialect.operators.comparison).to.be.ok;
+		expect(jsonSql.dialect.operators.logical).to.be.ok;
+		expect(jsonSql.dialect.operators.fetching).to.be.ok;
+		expect(jsonSql.dialect.operators.state).to.be.ok;
 		expect(jsonSql.dialect.modifiers).to.be.ok;
-		expect(jsonSql.dialect.logicalOperators).to.be.ok;
 	});
 
 	it('should throw error with wrong `type` property', function() {
