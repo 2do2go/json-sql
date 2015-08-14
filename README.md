@@ -33,7 +33,7 @@ sql.values
 
 ## Documentation
 
-Documentation is available [here](./docs).
+Documentation is available at the [./docs directory](./docs).
 
 ## Examples
 
@@ -118,20 +118,26 @@ sql.values
 // {}
 ```
 
-For more examples, take a look at the [./tests directory](./tests).
+For more examples, take a look at the [./examples directory](./examples).
 
 ## Tests
 
-Clone repository from github, `cd` into cloned dir and install dev dependencies
+Clone repository from github, `cd` into cloned dir and install dev dependencies:
 
 ``` bash
 $ npm install
 ```
 
-run tests
+Then run tests with command:
 
 ``` bash
 $ gulp test
+```
+
+Or run tests coverage with command:
+
+``` bash
+$ gulp coverage
 ```
 
 ## License
