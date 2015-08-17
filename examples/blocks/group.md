@@ -1,4 +1,4 @@
-# Group
+# Group block example
 
 ## Example 1 - single column
 

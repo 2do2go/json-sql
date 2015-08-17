@@ -1,4 +1,4 @@
-# Intersect query
+# Intersect query example
 
 ## Example 1 - intersect
 

@@ -1,4 +1,4 @@
-# Except query
+# Except query example
 
 ## Example 1 - except
 

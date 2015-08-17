@@ -1,4 +1,4 @@
-# Limit
+# Limit block example
 
 Query:
 

@@ -1,4 +1,4 @@
-# Alias
+# Alias block example
 
 Query:
 

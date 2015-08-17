@@ -1,4 +1,4 @@
-# Union query
+# Union query example
 
 ## Example 1 - union
 

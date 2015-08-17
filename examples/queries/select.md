@@ -1,4 +1,4 @@
-# Select query
+# Select query example
 
 Query:
 

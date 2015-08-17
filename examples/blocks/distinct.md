@@ -1,4 +1,4 @@
-# Distinct
+# Distinct block example
 
 Query:
 

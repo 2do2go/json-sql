@@ -1,4 +1,4 @@
-# Insert query
+# Insert query example
 
 Query:
 

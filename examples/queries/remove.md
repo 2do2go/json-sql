@@ -1,4 +1,4 @@
-# Remove query
+# Remove query example
 
 Query:
 

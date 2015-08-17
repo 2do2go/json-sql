@@ -1,4 +1,4 @@
-# Join
+# Join block example
 
 ## Example 1 - array
 

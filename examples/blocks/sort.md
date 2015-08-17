@@ -1,4 +1,4 @@
-# Sort
+# Sort block example
 
 ## Example 1 - single column
 

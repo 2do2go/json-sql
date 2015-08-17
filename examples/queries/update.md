@@ -1,4 +1,4 @@
-# Update query
+# Update query example
 
 Query:
 

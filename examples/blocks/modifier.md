@@ -1,4 +1,4 @@
-# Modifier
+# Modifier block example
 
 ## Example 1 - default modifier
 
