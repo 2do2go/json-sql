@@ -142,4 +142,4 @@ $ gulp coverage
 
 ## License
 
-MIT
+[MIT](./LICENSE)

@@ -53,9 +53,62 @@ Return object with properties:
 | `getValuesArray` | Method to get values as array.<br>Exists only if `separatedValues = true`. |
 | `getValuesObject` | Method to get values as object.<br>Exists only if `separatedValues = true`. |
 
-## Queries
+## Query types
 
 ### select
 
-__template:__ `{with} {withRecursive} select {distinct} {fields} from {from} {table} {query} {select} {expression} {alias} {join} {condition} {group} {sort} {limit} {offset}`
+Template for select queries.
 
+__template:__ `{with} {withRecursive} select {distinct} {fields} from {table} {query} {select} {expression} {alias} {join} {condition} {group} {sort} {limit} {offset}`
+
+### insert
+
+Template for insert queries.
+
+__template:__ `{with} {withRecursive} insert {or} into {table} {values} {condition} {returning}`
+
+### update
+
+Template for update queries.
+
+__template:__ `{with} {withRecursive} update {or} {table} {modifier} {condition} {returning}`
+
+### remove
+
+Template for remove queries.
+
+__template:__ `{with} {withRecursive} delete from {table} {condition} {returning}`
+
+### union / intersect / except
+
+Template for union, intersect and except queries.
+
+__template:__ `{with} {withRecursive} {queries} {sort} {limit} {offset}`
+
+### Auxiliary templates
+
+Templates below are used inside of blocks:
+
+### subQuery
+
+Template is used to build subqueries.
+
+__template:__ `({queryBody})`
+
+### insertValues
+
+Template is used by `values` block.
+
+__template:__ `({fields}) values {fieldValues}`
+
+### joinItem
+
+Template is used by `join` block to build each item.
+
+__template:__ `{type} join {table} {query} {select} {expression} {alias} {on}`
+
+### withItem
+
+Template is used by `with` and `withRecursive` blocks to build each item.
+
+__template:__ `{name} {fields} as {query} {select} {expression}`

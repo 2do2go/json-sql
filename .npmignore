@@ -1,2 +1,5 @@
-.npmignore
-test
+tests/
+examples/
+coverage/
+docs/
+gulpfile.js
