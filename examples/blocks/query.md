@@ -1,10 +1,10 @@
-# Subselect
+# Query
 
 Query:
 
 ``` js
 var sql = jsonSql.build({
-    select: {table: 'table'}
+    query: {type: 'select', table: 'table'}
 });
 ```
 

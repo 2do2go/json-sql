@@ -1,10 +1,11 @@
-# Subquery
+# Select query
 
 Query:
 
 ``` js
 var sql = jsonSql.build({
-    query: {type: 'select', table: 'table'}
+    type: 'select',
+    table: 'table'
 });
 ```
 
@@ -12,7 +13,7 @@ Result:
 
 ``` js
 sql.query
-// select * from (select * from "table");
+// select * from "table";
 
 sql.values
 // {}

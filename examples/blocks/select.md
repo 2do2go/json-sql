@@ -1,11 +1,10 @@
-# Basic remove query
+# Select
 
 Query:
 
 ``` js
 var sql = jsonSql.build({
-    type: 'remove',
-    table: 'table'
+    select: {table: 'table'}
 });
 ```
 
@@ -13,7 +12,7 @@ Result:
 
 ``` js
 sql.query
-// delete from "test";
+// select * from (select * from "table");
 
 sql.values
 // {}
