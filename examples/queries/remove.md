@@ -1,6 +1,4 @@
-# Remove query example
-
-Query:
+# `type: remove` query example
 
 ``` js
 var sql = jsonSql.build({

@@ -1,6 +1,4 @@
-# Distinct block example
-
-Query:
+# `distinct` block example
 
 ``` js
 var sql = jsonSql.build({

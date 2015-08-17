@@ -1,6 +1,4 @@
-# Alias block example
-
-Query:
+# `alias` block example
 
 ``` js
 var sql = jsonSql.build({

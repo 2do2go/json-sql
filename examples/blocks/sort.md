@@ -1,8 +1,6 @@
-# Sort block example
+# `sort` block example
 
 ## Example 1 - single column
-
-Query:
 
 ``` js
 var sql = jsonSql.build({
@@ -23,8 +21,6 @@ sql.values
 
 ## Example 2 - multiple columns
 
-Query:
-
 ``` js
 var sql = jsonSql.build({
     table: 'table',
@@ -43,8 +39,6 @@ sql.values
 ```
 
 ## Example 3 - multiple columns with order
-
-Query:
 
 ``` js
 var sql = jsonSql.build({

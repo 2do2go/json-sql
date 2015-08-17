@@ -1,8 +1,6 @@
-# Intersect query example
+# `type: intersect` query example
 
 ## Example 1 - intersect
-
-Query:
 
 ``` js
 var sql = jsonSql.build({
@@ -25,8 +23,6 @@ sql.values
 ```
 
 ## Example 2 - intersect all
-
-Query:
 
 ``` js
 var sql = jsonSql.build({

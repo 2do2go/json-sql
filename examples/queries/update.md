@@ -1,6 +1,4 @@
-# Update query example
-
-Query:
+# `type: update` query example
 
 ``` js
 var sql = jsonSql.build({

@@ -1,6 +1,4 @@
-# Query block example
-
-Query:
+# `query` block example
 
 ``` js
 var sql = jsonSql.build({

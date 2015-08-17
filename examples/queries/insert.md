@@ -1,6 +1,4 @@
-# Insert query example
-
-Query:
+# `type: insert` query example
 
 ``` js
 var sql = jsonSql.build({

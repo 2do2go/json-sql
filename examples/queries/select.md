@@ -1,6 +1,4 @@
-# Select query example
-
-Query:
+# `type: select` query example
 
 ``` js
 var sql = jsonSql.build({

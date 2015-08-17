@@ -1,6 +1,4 @@
-# Limit block example
-
-Query:
+# `limit` block example
 
 ``` js
 var sql = jsonSql.build({

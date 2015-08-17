@@ -1,8 +1,6 @@
-# Union query example
+# `type: union` query example
 
 ## Example 1 - union
-
-Query:
 
 ``` js
 var sql = jsonSql.build({
@@ -25,8 +23,6 @@ sql.values
 ```
 
 ## Example 2 - union all
-
-Query:
 
 ``` js
 var sql = jsonSql.build({

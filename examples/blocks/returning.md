@@ -1,6 +1,4 @@
-# Returning block example
-
-Query:
+# `returning` block example
 
 ``` js
 var sql = jsonSql.build({

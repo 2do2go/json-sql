@@ -1,6 +1,4 @@
-# Offset block example
-
-Query:
+# `offset` block example
 
 ``` js
 var sql = jsonSql.build({

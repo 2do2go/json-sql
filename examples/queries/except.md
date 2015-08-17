@@ -1,8 +1,6 @@
-# Except query example
+# `type: except` query example
 
 ## Example 1 - except
-
-Query:
 
 ``` js
 var sql = jsonSql.build({
@@ -25,8 +23,6 @@ sql.values
 ```
 
 ## Example 2 - except all
-
-Query:
 
 ``` js
 var sql = jsonSql.build({

@@ -1,6 +1,4 @@
-# Select block example
-
-Query:
+# `select` block example
 
 ``` js
 var sql = jsonSql.build({

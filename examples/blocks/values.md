@@ -1,8 +1,6 @@
-# Values block example
+# `values` block example
 
 # Example 1 - values only
-
-Query:
 
 ``` js
 var sql = jsonSql.build({
@@ -23,8 +21,6 @@ sql.values
 ```
 
 # Example 2 - fields + values
-
-Query:
 
 ``` js
 var sql = jsonSql.build({

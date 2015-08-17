@@ -1,8 +1,6 @@
-# Join block example
+# `join` block example
 
 ## Example 1 - array
-
-Query:
 
 ``` js
 var sql = jsonSql.build({
@@ -27,8 +25,6 @@ sql.values
 
 ## Example 2 - object
 
-Query:
-
 ``` js
 var sql = jsonSql.build({
     table: 'table',
@@ -52,8 +48,6 @@ sql.values
 ```
 
 ### Example 3 - join with subselect
-
-Query:
 
 ``` js
 var sql = jsonSql.build({

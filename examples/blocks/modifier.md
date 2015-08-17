@@ -1,8 +1,6 @@
-# Modifier block example
+# `modifier` block example
 
 ## Example 1 - default modifier
-
-Query:
 
 ``` js
 var sql = jsonSql.build({
@@ -23,8 +21,6 @@ sql.values
 ```
 
 ## Example 2 - specific modifiers
-
-Query:
 
 ``` js
 var sql = jsonSql.build({

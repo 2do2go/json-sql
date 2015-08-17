@@ -1,8 +1,6 @@
-# Condition block example
+# `condition` block example
 
 ## Example 1 - array
-
-Query:
 
 ``` js
 var sql = jsonSql.build({
@@ -25,8 +23,6 @@ sql.values
 ```
 
 ## Example 2 - object
-
-Query:
 
 ``` js
 var sql = jsonSql.build({

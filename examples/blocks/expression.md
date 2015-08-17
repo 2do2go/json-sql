@@ -1,6 +1,4 @@
-# Expression block example
-
-Query:
+# `expression` block example
 
 ``` js
 var sql = jsonSql.build({
