@@ -1,6 +1,6 @@
 # Intersect query
 
-# Example 1 - intersect
+## Example 1 - intersect
 
 Query:
 
@@ -24,7 +24,7 @@ sql.values
 // {}
 ```
 
-# Example 2 - intersect all
+## Example 2 - intersect all
 
 Query:
 

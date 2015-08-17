@@ -1,6 +1,6 @@
 # Union query
 
-# Example 1 - union
+## Example 1 - union
 
 Query:
 
@@ -24,7 +24,7 @@ sql.values
 // {}
 ```
 
-# Example 2 - union all
+## Example 2 - union all
 
 Query:
 

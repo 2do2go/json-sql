@@ -1,6 +1,6 @@
 # Except query
 
-# Example 1 - except
+## Example 1 - except
 
 Query:
 
@@ -24,7 +24,7 @@ sql.values
 // {}
 ```
 
-# Example 2 - except all
+## Example 2 - except all
 
 Query:
 
