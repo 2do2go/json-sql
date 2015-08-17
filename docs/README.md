@@ -2,9 +2,9 @@
 
 ## Table of contents
 
-* __[API](#api)__
+* [API](#api)
     - [Initialization](#initialization)
-    - [build(query)](#buildquery)
+    - __[build(query)](#buildquery)__
     - [configure(options)](#configureoptions)
     - [setDialect(name)](#setdialectname)
 * __[Queries](#queries)__
@@ -14,6 +14,8 @@
     - [type: 'remove'](#type-remove)
     - [type: 'union' | 'intersect' | 'except'](#type-union--intersect--except)
 * __[Blocks](#blocks)__
+
+---
 
 ## API
 
@@ -33,6 +35,8 @@ var jsonSql = new (require('json-sql').Builder)(options);
 
 `options` are similar to [configure method options](#available-options).
 
+---
+
 ### build(query)
 
 Create sql query from mongo-style query object.
@@ -49,6 +53,8 @@ Returns object with properties:
 | `getValuesArray` | Method to get values as array.<br>Exists only if `separatedValues = true`. |
 | `getValuesObject` | Method to get values as object.<br>Exists only if `separatedValues = true`. |
 
+---
+
 ### configure(options)
 
 Set options of json-sql builder instance.
@@ -63,9 +69,13 @@ Set options of json-sql builder instance.
 | `dialect` | `'base'` | Active dialect. See setDialect for dialects list. |
 | `wrappedIdentifiers` | `true` | If `true` - wrap all identifiers with dialect wrapper (name -> "name"). |
 
+---
+
 ### setDialect(name)
 
 Set active dialect, name can has value `'base'`, `'mssql'`, `'mysql'`, `'postrgresql'` or `'sqlite'`.
+
+---
 
 ## Queries
 
@@ -74,16 +84,18 @@ Set active dialect, name can has value `'base'`, `'mssql'`, `'mysql'`, `'postrgr
 >[ [with](#with-withrecursive) | [withRecursive](#with-withrecursive) ]<br>
 >[ [distinct](#distinct) ]<br>
 >[ [fields](#fields) ]<br>
->[table](#table) | query | select | expression<br>
+>[table](#table) | [query](#query) | [select](#select) | [expression](#expression)<br>
 >[ [alias](#alias) ]<br>
->[ join ]<br>
->[ condition ]<br>
->[ group ]<br>
->[ sort ]<br>
+>[ [join](#join) ]<br>
+>[ [condition](#condition) ]<br>
+>[ [group](#group) ]<br>
+>[ [sort](#sort) ]<br>
 >[ limit ]<br>
 >[ offset ]<br>
 
 [Example](/examples/queries/select.md)
+
+---
 
 ### type: 'insert'
 
@@ -91,10 +103,12 @@ Set active dialect, name can has value `'base'`, `'mssql'`, `'mysql'`, `'postrgr
 >[ or ]<br>
 >[table](#table)<br>
 >values<br>
->[ condition ]<br>
+>[ [condition](#condition) ]<br>
 >[ returning ]
 
 [Example](/examples/queries/insert.md)
+
+---
 
 ### type: 'update'
 
@@ -102,29 +116,35 @@ Set active dialect, name can has value `'base'`, `'mssql'`, `'mysql'`, `'postrgr
 >[ or ]<br>
 >[table](#table)<br>
 >modifier<br>
->[ condition ]<br>
+>[ [condition](#condition) ]<br>
 >[ returning ]
 
 [Example](/examples/queries/update.md)
+
+---
 
 ### type: 'remove'
 
 >[ [with](#with-withrecursive) | [withRecursive](#with-withrecursive) ]<br>
 >[table](#table)<br>
->[ condition ]<br>
+>[ [condition](#condition) ]<br>
 >[ returning ]
 
 [Example](/examples/queries/remove.md)
+
+---
 
 ### type: 'union' | 'intersect' | 'except'
 
 >[ [with](#with-withrecursive) | [withRecursive](#with-withrecursive) ]<br>
 >queries<br>
->[ sort ]<br>
+>[ [sort](#sort) ]<br>
 >[ limit ]<br>
 >[ offset ]
 
 Examples: [union](/examples/queries/union.md), [intersect](/examples/queries/intersect.md), [except](/examples/queries/except.md)
+
+---
 
 ## Blocks
 
@@ -136,7 +156,7 @@ If value is an `array`, each item of array should be an `object` and should conf
 
 >name<br>
 >[ [fields](#fields) ]<br>
->query | select | expression
+>[query](#query) | [select](#select) | [expression](#expression)
 
 [Example](/examples/blocks/with.md#example-1---array)
 
@@ -144,9 +164,11 @@ If value is an `object`, keys of object interpret as names and each value should
 
 >[ name ]<br>
 >[ [fields](#fields) ]<br>
->query | select | expression
+>[query](#query) | [select](#select) | [expression](#expression)
 
 [Example](/examples/blocks/with.md#example-2---object)
+
+---
 
 #### distinct
 
@@ -158,6 +180,8 @@ distinct: true
 
 [Example](/examples/blocks/distinct.md)
 
+---
+
 #### fields
 
 Should be an `array` or an `object`.
@@ -168,11 +192,14 @@ If value is an `array`, each item interprets as [field block](#field).
 
 If value is an `object`, keys of object interpret as field names and each value should be an `object` and should conform the scheme:
 
+>[ name ]<br>
 >[ [table](#table) ]<br>
 >[ cast ]<br>
 >[ [alias](#alias) ]
 
 [Example](/examples/blocks/fields.md)
+
+---
 
 #### field
 
@@ -181,10 +208,12 @@ Should be:
 * an other simple type or an `array` - interprets as value;
 * an `object` - should conform the scheme:
 
->query | select | [field](#field) | value | name | func | expression<br>
+>[query](#query) | [select](#select) | [field](#field) | value | name | func | [expression](#expression)<br>
 >[ [table](#table) ]<br>
 >[ cast ]<br>
 >[ [alias](#alias) ]
+
+---
 
 #### table
 
@@ -195,6 +224,41 @@ table: 'tableName'
 ```
 
 [Example](/examples/blocks/table.md)
+
+---
+
+#### query
+
+Should be an `object`. Value interprets as sub-query and process recursively with [build(query)](#buildquery) method.
+
+---
+
+#### select
+
+Should be an `object`. Value interprets as sub-select and process recursively with [build(query)](#buildquery) method.
+
+---
+
+#### expression
+
+Should be a `string` or an `object`.
+
+If value is a `string`:
+
+```
+expression: 'random()'
+```
+
+[Example](/examples/blocks/expression.md)
+
+If value is an `object` it should conform the scheme:
+
+>pattern<br>
+>[ values ]
+
+[Example](/examples/blocks/expression.md)
+
+---
 
 #### alias
 
@@ -214,3 +278,90 @@ If value is an `object` it should conform the scheme:
 >[ columns ]
 
 [Example](/examples/blocks/alias.md)
+
+---
+
+#### join
+
+Should be an `array` or an `object`.
+
+If value is an `array`, each item of array should be an `object` and should conform the scheme:
+
+>[ type ]<br>
+>[table](#table) | [query](#query) | [select](#select) | [expression](#expression)<br>
+>[ [alias](#alias) ]<br>
+>[ on ]
+
+[Example](/examples/blocks/join.md#example-1---array)
+
+If value is an `object`, keys of object interpret as table names and each value should be an `object` and should conform the scheme:
+
+>[ type ]<br>
+>[ [table](#table) | [query](#query) | [select](#select) | [expression](#expression) ]<br>
+>[ [alias](#alias) ]<br>
+>[ on ]
+
+[Example](/examples/blocks/join.md#example-2---object)
+
+---
+
+#### condition
+
+Should be an `array` or an `object`.
+
+[Example](/examples/blocks/condition.md)
+
+---
+
+#### group
+
+Should be a `string` or an `array`.
+
+If value is a `string`:
+
+```
+group: 'groupName'
+```
+
+[Example](/examples/blocks/group.md)
+
+If value is an `array`:
+
+```
+group: ['groupName1', 'groupName2']
+```
+
+[Example](/examples/blocks/group.md)
+
+---
+
+#### sort
+
+Should be a `string`, an `array` or an `object`.
+
+If value is a `string`:
+
+```
+sort: 'sortName'
+```
+
+[Example](/examples/blocks/sort.md)
+
+If value is an `array`:
+
+```
+sort: ['sortName1', 'sortName2']
+```
+
+[Example](/examples/blocks/sort.md)
+
+If value is an `object`:
+
+```
+sort: {
+    sortName1: 1,
+    sortName2: -1
+}
+```
+
+[Example](/examples/blocks/group.md)
