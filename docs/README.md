@@ -18,6 +18,23 @@ var jsonSql = new (require('json-sql').Builder)(options);
 
 Options are similar to configure method options.
 
+### build(query)
+
+Create sql query from mongo-style query object.
+
+Query is generated from template. Template is a set of blocks, where some blocks have own sub-templates. Most of blocks are optional.
+See list of available templates and blocks below.
+
+Return object with properties:
+
+| Property | Description |
+| -------- | ----------- |
+| `query` | SQL query string |
+| `value` | Array or object with values.<br>Exists only if `separatedValues = true`. |
+| `prefixValues()` | Method to get values with `valuesPrefix`.<br>Exists only if `separatedValues = true`. |
+| `getValuesArray` | Method to get values as array.<br>Exists only if `separatedValues = true`. |
+| `getValuesObject` | Method to get values as object.<br>Exists only if `separatedValues = true`. |
+
 ### configure(options)
 
 Set options of json-sql builder instance.
@@ -36,79 +53,73 @@ Set options of json-sql builder instance.
 
 Set active dialect, name can has value `'base'`, `'mssql'`, `'mysql'`, `'postrgresql'` or `'sqlite'`.
 
-### build(query)
+## Queries
 
-Create sql query from mongo-style query object.
+### type: 'select'
 
-Query is generated from template. Template is a set of blocks, where some blocks have own sub-templates. Most of blocks are optional.
-See list of available templates and blocks below.
+>[ with | withRecursive ]<br>
+>[ distinct ]<br>
+>[ fields ]<br>
+>[table](#table) | query | select | expression<br>
+>[ alias ]<br>
+>[ join ]<br>
+>[ condition ]<br>
+>[ group ]<br>
+>[ sort ]<br>
+>[ limit ]<br>
+>[ offset ]<br>
 
-Return object with properties:
+[Example](/examples/queries/select.md)
 
-| Property | Description |
-| -------- | ----------- |
-| `query` | SQL query string |
-| `value` | Array or object with values.<br>Exists only if `separatedValues = true`. |
-| `prefixValues()` | Method to get values with `valuesPrefix`.<br>Exists only if `separatedValues = true`. |
-| `getValuesArray` | Method to get values as array.<br>Exists only if `separatedValues = true`. |
-| `getValuesObject` | Method to get values as object.<br>Exists only if `separatedValues = true`. |
+### type: 'insert'
 
-## Query types
+>[ with | withRecursive ]<br>
+>[ or ]<br>
+>[table](#table)<br>
+>values<br>
+>[ condition ]<br>
+>[ returning ]
 
-### select
+[Example](/examples/queries/insert.md)
 
-Template for select queries.
+### type: 'update'
 
-__template:__ `{with} {withRecursive} select {distinct} {fields} from {table} {query} {select} {expression} {alias} {join} {condition} {group} {sort} {limit} {offset}`
+>[ with | withRecursive ]<br>
+>[ or ]<br>
+>[table](#table)<br>
+>modifier<br>
+>[ condition ]<br>
+>[ returning ]
 
-### insert
+[Example](/examples/queries/update.md)
 
-Template for insert queries.
+### type: 'remove'
 
-__template:__ `{with} {withRecursive} insert {or} into {table} {values} {condition} {returning}`
+>[ with | withRecursive ]<br>
+>[table](#table)<br>
+>[ condition ]<br>
+>[ returning ]
 
-### update
+[Example](/examples/queries/remove.md)
 
-Template for update queries.
+### type: 'union' | 'intersect' | 'except'
 
-__template:__ `{with} {withRecursive} update {or} {table} {modifier} {condition} {returning}`
+>[ with | withRecursive ]<br>
+>queries<br>
+>[ sort ]<br>
+>[ limit ]<br>
+>[ offset ]
 
-### remove
+Examples: [union](/examples/queries/union.md), [intersect](/examples/queries/intersect.md), [except](/examples/queries/except.md)
 
-Template for remove queries.
+## Blocks
 
-__template:__ `{with} {withRecursive} delete from {table} {condition} {returning}`
+#### table
 
-### union / intersect / except
+Must be a `string`:
 
-Template for union, intersect and except queries.
+```
+table: 'name'
+```
 
-__template:__ `{with} {withRecursive} {queries} {sort} {limit} {offset}`
-
-### Auxiliary templates
-
-Templates below are used inside of blocks:
-
-### subQuery
-
-Template is used to build subqueries.
-
-__template:__ `({queryBody})`
-
-### insertValues
-
-Template is used by `values` block.
-
-__template:__ `({fields}) values {fieldValues}`
-
-### joinItem
-
-Template is used by `join` block to build each item.
-
-__template:__ `{type} join {table} {query} {select} {expression} {alias} {on}`
-
-### withItem
-
-Template is used by `with` and `withRecursive` blocks to build each item.
-
-__template:__ `{name} {fields} as {query} {select} {expression}`
+[Example](/examples/blocks/table.md)
