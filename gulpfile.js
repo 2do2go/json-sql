@@ -13,12 +13,12 @@ gulp.task('test', function() {
 		}));
 });
 
-gulp.task('coverage', function (callback) {
-	return gulp.src(['lib/**/*.js'])
+gulp.task('coverage', function(callback) {
+	gulp.src(['lib/**/*.js'])
 		.pipe(istanbul())
 		.pipe(istanbul.hookRequire())
-		.on('finish', function () {
-			gulp.src(['./tests/*.js'])
+		.on('finish', function() {
+			gulp.src(['./tests/*.js'], {read: false})
 				.pipe(mocha({
 					reporter: 'spec',
 					bail: true

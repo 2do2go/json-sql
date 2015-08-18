@@ -347,7 +347,8 @@ describe('Select', function() {
 					table: 'users',
 					alias: 1
 				});
-			}).to.throw('Invalid `alias` property type "number"');
+			}).to.throw('`alias` property should have one of expected types: ' +
+				'"string", "object" in `select` clause');
 		});
 
 		it('should throw error if object `alias` does not have `name` property', function() {

@@ -19,7 +19,7 @@ describe('Union, except, intersect', function() {
 					type: 'union',
 					queries: 'wrong'
 				});
-			}).to.throw('`queries` property should be an array in `union` clause');
+			}).to.throw('`queries` property should have type "array" in `union` clause');
 		});
 
 		it('should throw error with value length < 2', function() {
