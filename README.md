@@ -118,7 +118,7 @@ sql.values
 // {}
 ```
 
-For more examples, take a look at the [./examples directory](./examples).
+For more examples, take a look at the [./docs directory](./docs) or [./tests directory](./tests).
 
 ## Tests
 

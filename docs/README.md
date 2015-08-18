@@ -50,8 +50,8 @@ Returns object with properties:
 | `query` | SQL query string |
 | `value` | Array or object with values.<br>Exists only if `separatedValues = true`. |
 | `prefixValues()` | Method to get values with `valuesPrefix`.<br>Exists only if `separatedValues = true`. |
-| `getValuesArray` | Method to get values as array.<br>Exists only if `separatedValues = true`. |
-| `getValuesObject` | Method to get values as object.<br>Exists only if `separatedValues = true`. |
+| `getValuesArray()` | Method to get values as array.<br>Exists only if `separatedValues = true`. |
+| `getValuesObject()` | Method to get values as object.<br>Exists only if `separatedValues = true`. |
 
 ---
 
@@ -90,36 +90,83 @@ Set active dialect, name can has value `'base'`, `'mssql'`, `'mysql'`, `'postrgr
 >[ [condition](#condition) ]<br>
 >[ [group](#group) ]<br>
 >[ [sort](#sort) ]<br>
->[ limit ]<br>
->[ offset ]<br>
+>[ [limit](#limit) ]<br>
+>[ [offset](#offset) ]
 
-[Example](/examples/queries/select.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'select',
+    fields: ['a', 'b']
+    table: 'table'
+});
+
+sql.query
+// select "a", "b" from "table";
+```
+
+If `fields` is not specified in query, result fields is `*` (all columns of the selected rows).
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'select',
+    table: 'table'
+});
+
+sql.query
+// select * from "table";
+```
 
 ---
 
 ### type: 'insert'
 
 >[ [with](#with-withrecursive) | [withRecursive](#with-withrecursive) ]<br>
->[ or ]<br>
+>[ [or](#or) ]<br>
 >[table](#table)<br>
->values<br>
+>[values](#values)<br>
 >[ [condition](#condition) ]<br>
->[ returning ]
+>[ [returning](#returning) ]
 
-[Example](/examples/queries/insert.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'insert',
+    table: 'table',
+    values: {a: 4}
+});
+
+sql.query
+// insert into "table" ("a") values (4);
+```
 
 ---
 
 ### type: 'update'
 
 >[ [with](#with-withrecursive) | [withRecursive](#with-withrecursive) ]<br>
->[ or ]<br>
+>[ [or](#or) ]<br>
 >[table](#table)<br>
->modifier<br>
+>[modifier](#modifier)<br>
 >[ [condition](#condition) ]<br>
->[ returning ]
+>[ [returning](#returning) ]
 
-[Example](/examples/queries/update.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'update',
+    table: 'table',
+    modifier: {a: 5}
+});
+
+sql.query
+// update "table" set a = 5;
+```
 
 ---
 
@@ -128,27 +175,83 @@ Set active dialect, name can has value `'base'`, `'mssql'`, `'mysql'`, `'postrgr
 >[ [with](#with-withrecursive) | [withRecursive](#with-withrecursive) ]<br>
 >[table](#table)<br>
 >[ [condition](#condition) ]<br>
->[ returning ]
+>[ [returning](#returning) ]
 
-[Example](/examples/queries/remove.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'remove',
+    table: 'table'
+});
+
+sql.query
+// delete from "table";
+```
 
 ---
 
 ### type: 'union' | 'intersect' | 'except'
 
+>[ [all](#all) ]<br>
 >[ [with](#with-withrecursive) | [withRecursive](#with-withrecursive) ]<br>
->queries<br>
+>[queries](#queries)<br>
 >[ [sort](#sort) ]<br>
->[ limit ]<br>
->[ offset ]
+>[ [limit](#limit) ]<br>
+>[ [offset](#offset) ]
 
-Examples: [union](/examples/queries/union.md), [intersect](/examples/queries/intersect.md), [except](/examples/queries/except.md)
+__`type: 'union'` example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'union',
+    queries: [
+        {type: 'select', table: 'table1'},
+        {type: 'select', table: 'table2'}
+    ]
+});
+
+sql.query
+// (select * from "table1") union (select * from "table2");
+```
+
+__`type: 'intersect'` example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'intersect',
+    queries: [
+        {type: 'select', table: 'table1'},
+        {type: 'select', table: 'table2'}
+    ]
+});
+
+sql.query
+// (select * from "table1") intersect (select * from "table2");
+```
+
+__`type: 'except'` example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'except',
+    queries: [
+        {type: 'select', table: 'table1'},
+        {type: 'select', table: 'table2'}
+    ]
+});
+
+sql.query
+// (select * from "table1") except (select * from "table2");
+```
 
 ---
 
 ## Blocks
 
-#### with, withRecursive
+Blocks are small chunks of query.
+
+### with, withRecursive
 
 Should be an `array` or an `object`.
 
@@ -158,7 +261,20 @@ If value is an `array`, each item of array should be an `object` and should conf
 >[ [fields](#fields) ]<br>
 >[query](#query) | [select](#select) | [expression](#expression)
 
-[Example](/examples/blocks/with.md#example-1---array)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    'with': [{
+        name: 'table',
+        select: {table: 'withTable'}
+    }],
+    table: 'table'
+});
+
+sql.query
+// with "table" as (select * from "withTable") select * from "table";
+```
 
 If value is an `object`, keys of object interpret as names and each value should be an `object` and should conform the scheme:
 
@@ -166,11 +282,25 @@ If value is an `object`, keys of object interpret as names and each value should
 >[ [fields](#fields) ]<br>
 >[query](#query) | [select](#select) | [expression](#expression)
 
-[Example](/examples/blocks/with.md#example-2---object)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    'with': {
+        table: {
+            select: {table: 'withTable'}
+        }
+    },
+    table: 'table'
+});
+
+sql.query
+// with "table" as (select * from "withTable") select * from "table";
+```
 
 ---
 
-#### distinct
+### distinct
 
 Should be a `boolean`:
 
@@ -178,17 +308,42 @@ Should be a `boolean`:
 distinct: true
 ```
 
-[Example](/examples/blocks/distinct.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    distinct: true,
+    table: 'table'
+});
+
+sql.query
+// select distinct * from "table";
+```
 
 ---
 
-#### fields
+### fields
 
 Should be an `array` or an `object`.
 
 If value is an `array`, each item interprets as [field block](#field).
 
-[Example](/examples/blocks/fields.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    fields: [
+        'a',
+        {b: 'c'},
+        {table: 'd', name: 'e', alias: 'f'},
+        ['g']
+    ],
+    table: 'table'
+});
+
+sql.query
+// select "a", "b" as "c", "d"."e" as "f", "g" from "table";
+```
 
 If value is an `object`, keys of object interpret as field names and each value should be an `object` and should conform the scheme:
 
@@ -197,15 +352,28 @@ If value is an `object`, keys of object interpret as field names and each value 
 >[ cast ]<br>
 >[ [alias](#alias) ]
 
-[Example](/examples/blocks/fields.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    fields: {
+        a: 'b',
+        d: {table: 'c', alias: 'e'}
+    },
+    table: 'table'
+});
+
+sql.query
+// select "a" as "b", "c"."d" as "e" from "table";
+```
 
 ---
 
-#### field
+### field
 
 Should be:
 * a `string` - interprets as field name;
-* an other simple type or an `array` - interprets as value;
+* another simple type or an `array` - interprets as value;
 * an `object` - should conform the scheme:
 
 >[query](#query) | [select](#select) | [field](#field) | value | name | func | [expression](#expression)<br>
@@ -215,7 +383,7 @@ Should be:
 
 ---
 
-#### table
+### table
 
 Should be a `string`:
 
@@ -223,23 +391,54 @@ Should be a `string`:
 table: 'tableName'
 ```
 
-[Example](/examples/blocks/table.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table'
+});
+
+sql.query
+// select * from "table";
+```
 
 ---
 
-#### query
+### query
 
 Should be an `object`. Value interprets as sub-query and process recursively with [build(query)](#buildquery) method.
 
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    query: {type: 'select', table: 'table'}
+});
+
+sql.query
+// select * from (select * from "table");
+```
+
 ---
 
-#### select
+### select
 
 Should be an `object`. Value interprets as sub-select and process recursively with [build(query)](#buildquery) method.
 
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    select: {table: 'table'}
+});
+
+sql.query
+// select * from (select * from "table");
+```
+
 ---
 
-#### expression
+### expression
 
 Should be a `string` or an `object`.
 
@@ -249,18 +448,41 @@ If value is a `string`:
 expression: 'random()'
 ```
 
-[Example](/examples/blocks/expression.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    expression: 'generate_series(2, 4)'
+});
+
+sql.query
+// select * from generate_series(2, 4);
+```
 
 If value is an `object` it should conform the scheme:
 
 >pattern<br>
 >[ values ]
 
-[Example](/examples/blocks/expression.md)
+where `pattern` is a `string` pattern with placeholders `{placeholderName}`, `values` is a hash that contains values for each `placeholderName`.
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    expression: {
+        pattern: 'generate_series({start}, {stop})',
+        values: {start: 2, stop: 4}
+    }
+});
+
+sql.query
+// select * from generate_series(2, 4);
+```
 
 ---
 
-#### alias
+### alias
 
 Should be a `string` or an `object`.
 
@@ -270,18 +492,38 @@ If value is a `string`:
 alias: 'aliasName'
 ```
 
-[Example](/examples/blocks/alias.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    alias: 'alias'
+});
+
+sql.query
+// select * from "table" as "alias";
+```
 
 If value is an `object` it should conform the scheme:
 
 >name<br>
 >[ columns ]
 
-[Example](/examples/blocks/alias.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    alias: {name: 'alias'}
+});
+
+sql.query
+// select * from "table" as "alias";
+```
 
 ---
 
-#### join
+### join
 
 Should be an `array` or an `object`.
 
@@ -292,7 +534,21 @@ If value is an `array`, each item of array should be an `object` and should conf
 >[ [alias](#alias) ]<br>
 >[ on ]
 
-[Example](/examples/blocks/join.md#example-1---array)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    join: [{
+        type: 'right',
+        table: 'joinTable',
+        on: {'table.a': 'joinTable.b'}
+    }]
+});
+
+sql.query
+// select * from "table" right join "joinTable" on "table"."a" = "joinTable"."b";
+```
 
 If value is an `object`, keys of object interpret as table names and each value should be an `object` and should conform the scheme:
 
@@ -301,19 +557,78 @@ If value is an `object`, keys of object interpret as table names and each value 
 >[ [alias](#alias) ]<br>
 >[ on ]
 
-[Example](/examples/blocks/join.md#example-2---object)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    join: {
+        joinTable: {
+            type: 'inner',
+            on: {'table.a': 'joinTable.b'}
+        }
+    }]
+});
+
+sql.query
+// select * from "table" inner join "joinTable" on "table"."a" = "joinTable"."b";
+```
+
+__Join with sub-select example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    join: [{
+        select: {table: 'joinTable'},
+        alias: 'joinTable',
+        on: {'table.a': 'joinTable.b'}
+    }]
+});
+
+sql.query
+// select * from "table" join (select * from "joinTable") as "joinTable" on "table"."a" = "joinTable"."b";
+```
 
 ---
 
-#### condition
+### condition
 
 Should be an `array` or an `object`.
 
-[Example](/examples/blocks/condition.md)
+__`array` example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    condition: [
+        {a: {$gt: 1}},
+        {b: {$lt: 10}}
+    ]
+});
+
+sql.query
+// select * from "table" where "a" > 1 and "b" < 10;
+```
+
+__`object` example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    condition: {
+        a: {$gt: 1},
+        b: {$lt: 10}
+    }
+});
+
+sql.query
+// select * from "table" where "a" > 1 and "b" < 10;
+```
 
 ---
 
-#### group
+### group
 
 Should be a `string` or an `array`.
 
@@ -323,7 +638,17 @@ If value is a `string`:
 group: 'groupName'
 ```
 
-[Example](/examples/blocks/group.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    group: 'a'
+});
+
+sql.query
+// select * from "table" group by "a";
+```
 
 If value is an `array`:
 
@@ -331,37 +656,315 @@ If value is an `array`:
 group: ['groupName1', 'groupName2']
 ```
 
-[Example](/examples/blocks/group.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    group: ['a', 'b']
+});
+
+sql.query
+// select * from "table" group by "a", "b";
+```
 
 ---
 
-#### sort
+### sort
 
 Should be a `string`, an `array` or an `object`.
 
 If value is a `string`:
 
 ```
-sort: 'sortName'
+sort: 'fieldName'
 ```
 
-[Example](/examples/blocks/sort.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    sort: 'a'
+});
+
+sql.query
+// select * from "table" order by "a";
+```
 
 If value is an `array`:
 
 ```
-sort: ['sortName1', 'sortName2']
+sort: ['fieldName1', 'fieldName2']
 ```
 
-[Example](/examples/blocks/sort.md)
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    sort: ['a', 'b']
+});
+
+sql.query
+// select * from "table" order by "a", "b";
+```
 
 If value is an `object`:
 
 ```
 sort: {
-    sortName1: 1,
-    sortName2: -1
+    fieldName1: 1,
+    fieldName2: -1
 }
 ```
 
-[Example](/examples/blocks/group.md)
+__Example__:
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    sort: {a: 1, b: -1}
+});
+
+sql.query
+// select * from "table" order by "a" asc, "b" desc;
+```
+
+---
+
+### limit
+
+Should be a `number`.
+
+```
+limit: limitValue
+```
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    limit: 5
+});
+
+sql.query
+// select * from "table" limit 5;
+```
+
+---
+
+### offset
+
+Should be a `number`.
+
+```
+offset: offsetValue
+```
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    table: 'table',
+    offset: 5
+});
+
+sql.query
+// select * from "table" offset 5;
+```
+
+---
+
+### or
+
+Should be a `string`.
+
+Available values: 'rollback', 'abort', 'replace', 'fail', 'ignore'.
+
+```
+or: 'orValue'
+```
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'insert',
+    or: 'replace',
+    table: 'table',
+    values: {a: 5}
+});
+
+sql.query
+// insert or replace into "table" ("a") values (5);
+```
+
+---
+
+### values
+
+Should be an `array` or an `object`.
+
+If value is an `array`, each item should be an `object` and interprets as single inserted row where keys are field names and corresponding values are field values.
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'insert',
+    table: 'table',
+    values: [
+        {a: 5, b: 'text1'},
+        {a: 6, b: 'text2'}
+    ]
+});
+
+sql.query
+// insert into "table" ("a", "b") values (5, $p1), (6, $p2);
+
+sql.values
+// {p1: 'text1', p2: 'text2'}
+```
+
+If value is an `object`, it interprets as single inserted row where keys are field names and corresponding values are field values.
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'insert',
+    table: 'table',
+    values: {a: 5, b: 'text'}
+});
+
+sql.query
+// insert into "table" ("a", "b") values (5, $p1);
+
+sql.values
+// {p1: 'text'}
+```
+
+Also you can specify fields array. If there no key in value object it value is `null`.
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'insert',
+    table: 'table',
+    fields: ['a', 'b', 'c'],
+    values: {c: 'text', b: 5}
+});
+
+sql.query
+// insert into "table" ("a", "b", "c") values (null, 5, $p1);
+
+sql.values
+// {p1: 'text'}
+```
+
+---
+
+### modifier
+
+Should be an `object`.
+
+You can specify modifier operator.
+Available operators: `$set`, `$inc`, `$dec`, `$mul`, `$div`, `$default`.
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'update',
+    table: 'table',
+    modifier: {
+        $set: {a: 5},
+        $default: {b: true},
+        $inc: {c: 10}
+    }
+});
+
+sql.query
+// update "table" set "a" = 5, "b" = default, "c" = "c" + 10;
+```
+
+If modifier operator is not specified it uses default operator `$set`.
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'update',
+    table: 'table',
+    modifier: {a: 5}
+});
+
+sql.query
+// update "table" set "a" = 5;
+```
+
+---
+
+### returning
+
+Format is similar to [fields](#fields) block.
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'insert',
+    table: 'table',
+    values: {a: 5},
+    returning: ['a']
+});
+
+sql.query
+// insert into "table" ("a") values (5) returning "a";
+```
+
+---
+
+### all
+
+Should be a `boolean`.
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'union',
+    all: true,
+    queries: [
+        {type: 'select', table: 'table1'},
+        {type: 'select', table: 'table2'}
+    ]
+});
+
+sql.query
+// (select * from "table1") union all (select * from "table2");
+```
+
+---
+
+### queries
+
+Should be an `array` with minimum 2 items. Each item interprets as sub-query and process recursively with [build(query)](#buildquery) method.
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    type: 'union',
+    queries: [
+        {type: 'select', table: 'table1'},
+        {type: 'select', table: 'table2'}
+    ]
+});
+
+sql.query
+// (select * from "table1") union (select * from "table2");
+```
