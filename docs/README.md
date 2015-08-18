@@ -14,6 +14,7 @@
     - [type: 'remove'](#type-remove)
     - [type: 'union' | 'intersect' | 'except'](#type-union--intersect--except)
 * __[Blocks](#blocks)__
+* __[Condition operators](#condition-operators)__
 
 ---
 
@@ -635,7 +636,7 @@ Should be a `string` or an `array`.
 If value is a `string`:
 
 ```
-group: 'groupName'
+group: 'fieldName'
 ```
 
 __Example:__
@@ -653,7 +654,7 @@ sql.query
 If value is an `array`:
 
 ```
-group: ['groupName1', 'groupName2']
+group: ['fieldName1', 'fieldName2']
 ```
 
 __Example:__
@@ -968,3 +969,9 @@ var sql = jsonSql.build({
 sql.query
 // (select * from "table1") union (select * from "table2");
 ```
+
+---
+
+## Condition operators
+
+TODO: write this section
