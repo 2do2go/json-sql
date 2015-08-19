@@ -327,7 +327,7 @@ sql.query
 
 Should be an `array` or an `object`.
 
-If value is an `array`, each item interprets as [field block](#field).
+If value is an `array`, each item interprets as [term block](#term).
 
 __Example:__
 
@@ -370,17 +370,81 @@ sql.query
 
 ---
 
-### field
+### term
 
 Should be:
 * a `string` - interprets as field name;
 * another simple type or an `array` - interprets as value;
 * an `object` - should conform the scheme:
 
->[query](#query) | [select](#select) | [field](#field) | value | name | func | [expression](#expression)<br>
->[ [table](#table) ]<br>
+>[query](#query) | [select](#select) | [field](#field) | [value](#value) | [func](#func) | [expression](#expression)<br>
 >[ cast ]<br>
 >[ [alias](#alias) ]
+
+---
+
+### field
+
+Should be a `string` or an `object`.
+
+If value is a `string`:
+
+```
+field: 'fieldName'
+```
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    fields: [{field: 'a'}],
+    table: 'table'
+});
+
+sql.query
+// select "a" from "table";
+```
+
+If value is an `object` it should conform the scheme:
+
+>name<br>
+>[ [table](#table) ]
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    fields: [{field: {name: 'a', table: 'table'}}],
+    table: 'table'
+});
+
+sql.query
+// select "table"."a" from "table";
+```
+
+---
+
+### value
+
+Can have any type.
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    fields: [
+        {value: 5},
+        {value: 'test'}
+    ],
+    table: 'table'
+});
+
+sql.query
+// select 5, $p1 from "table";
+
+sql.values
+// {p1: 'test'}
+```
 
 ---
 
@@ -435,6 +499,54 @@ var sql = jsonSql.build({
 
 sql.query
 // select * from (select * from "table");
+```
+
+---
+
+### func
+
+Should be a `string` or an `object`.
+
+If value is a `string`:
+
+```
+func: 'random'
+```
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    fields: [{func: 'random'}],
+    table: 'table'
+});
+
+sql.query
+// select random() from "table";
+```
+
+If value is an `object` it should conform the scheme:
+
+>name<br>
+>[ args ]
+
+where `name` is a `string` name of function, `args` is an `array` that contains it arguments.
+
+__Example:__
+
+``` js
+var sql = jsonSql.build({
+    fields: [{
+        func: {
+            name: 'sum',
+            args: [{field: 'a'}]
+        }
+    }],
+    table: 'table'
+});
+
+sql.query
+// select sum("a") from table;
 ```
 
 ---
