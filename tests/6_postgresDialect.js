@@ -94,5 +94,33 @@ describe('PostgreSQL dialect', function() {
 			);
 			expect(result.values).to.be.eql(['a', 'b']);
 		});
+
+		it('should be ok with `$ilike` conditional operator', function() {
+			var result = jsonSql.build({
+				table: 'test',
+				condition: {
+					params: {$ilike: 'hello%'}
+				}
+			});
+
+			expect(result.query).to.be.equal(
+				'select * from "test" where "params" ilike $1;'
+			);
+			expect(result.values).to.be.eql(['hello%']);
+		});
+
+		it('should be ok with `$nilike` conditional operator', function() {
+			var result = jsonSql.build({
+				table: 'test',
+				condition: {
+					params: {$nilike: 'hello%'}
+				}
+			});
+
+			expect(result.query).to.be.equal(
+				'select * from "test" where "params" not ilike $1;'
+			);
+			expect(result.values).to.be.eql(['hello%']);
+		});
 	});
 });
