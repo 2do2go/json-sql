@@ -3,6 +3,7 @@
   "description": "node.js json to sql queries mapper",
   "version": "0.3.6",
   "author": "Artem Zhukov <artzhuchka@gmail.com>",
+  "license": "MIT",
   "repository": {
     "type": "git",
     "url": "git@github.com:2do2go/json-sql.git"
