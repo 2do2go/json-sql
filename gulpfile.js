@@ -6,7 +6,7 @@ var jshint = require('gulp-jshint');
 var istanbul = require('gulp-istanbul');
 
 gulp.task('test', function() {
-	return gulp.src(['./tests/*.js'], {read: false})
+	return gulp.src(['./tests/**/*.js'], {read: false})
 		.pipe(mocha({
 			reporter: 'spec',
 			bail: true
@@ -14,7 +14,7 @@ gulp.task('test', function() {
 });
 
 gulp.task('coverage', function(callback) {
-	gulp.src(['lib/**/*.js'])
+	gulp.src(['./lib/**/*.js'])
 		.pipe(istanbul())
 		.pipe(istanbul.hookRequire())
 		.on('finish', function() {
