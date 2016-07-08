@@ -261,4 +261,26 @@ describe('PostgreSQL dialect', function() {
 		});
 
 	});
+
+	describe('select', function() {
+		describe('distinctOn', function() {
+			it('should be ok with string value', function() {
+				var result = jsonSql.build({
+					table: 'users',
+					distinctOn: 'a'
+				});
+
+				expect(result.query).to.be.equal('select distinct on ("a") * from "users";');
+			});
+
+			it('should be ok with array value', function() {
+				var result = jsonSql.build({
+					table: 'users',
+					distinctOn: ['a', 'b']
+				});
+
+				expect(result.query).to.be.equal('select distinct on ("a", "b") * from "users";');
+			});
+		});
+	});
 });
