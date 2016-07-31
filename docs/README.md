@@ -74,7 +74,7 @@ Set options of json-sql builder instance.
 
 ### setDialect(name)
 
-Set active dialect, name can has value `'base'`, `'mssql'`, `'mysql'`, `'postrgresql'` or `'sqlite'`.
+Set active dialect, name can has value `'base'`, `'mssql'`, `'mysql'`, `'postgresql'` or `'sqlite'`.
 
 ---
 
