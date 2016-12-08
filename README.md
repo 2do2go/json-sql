@@ -1,6 +1,7 @@
 # JSON-SQL
 
 Node.js library for mapping mongo-style query objects to SQL queries.
+
 This library **is not** a driver, it is only translator, you should use specific driver for your db (for example https://github.com/brianc/node-postgres for PostgreSQL) to execute result query.
 
 ## Quick Start
