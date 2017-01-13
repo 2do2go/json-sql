@@ -69,6 +69,7 @@ Set options of json-sql builder instance.
 | `valuesPrefix` | `'$'` | Prefix for values placeholders<br>Option is used if `namedValues = true`. |
 | `dialect` | `'base'` | Active dialect. See setDialect for dialects list. |
 | `wrappedIdentifiers` | `true` | If `true` - wrap all identifiers with dialect wrapper (name -> "name"). |
+| `indexedValues` | `true` | If `true` - uses auto-generated id for values placeholders after the value prefix |
 
 ---
 
