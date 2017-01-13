@@ -205,7 +205,7 @@ describe('Builder', function() {
 
 		expect(result.query).to.be.equal('select * from "users" where "name" = $1;');
 		expect(result.values).to.be.eql(['John']);
-  });
+	});
 
 	it('should use prefix `@` for values with option `valuesPrefix` = @', function() {
 		jsonSql.configure({
@@ -219,7 +219,7 @@ describe('Builder', function() {
 
 		expect(result.query).to.be.equal('select * from "users" where "name" = @p1;');
 		expect(result.values).to.be.eql({p1: 'John'});
-  });
+	});
 
 	it('should return prefixed values with method `prefixValues`', function() {
 		var result = jsonSql.build({
@@ -230,7 +230,7 @@ describe('Builder', function() {
 		expect(result.query).to.be.equal('select * from "users" where "name" = @p1;');
 		expect(result.values).to.be.eql({p1: 'John'});
 		expect(result.prefixValues()).to.be.eql({'@p1': 'John'});
-  });
+	});
 
 	it('should return array values with method `getValuesArray`', function() {
 		var result = jsonSql.build({
@@ -260,26 +260,23 @@ describe('Builder', function() {
 		expect(result.values).to.be.eql(['John']);
 		expect(result.prefixValues()).to.be.eql({'$1': 'John'});
 		expect(result.getValuesObject()).to.be.eql({1: 'John'});
-  });
-
-  it('should throw if `indexedValues = false` and `namedValues = true`', function() {
-    jsonSql.configure({
-      namedValues: true,
-			indexedValues: false
-		});
-
-    expect(function() {
-			jsonSql.build({
-        table: 'users',
-        condition: {name: 'John'}
-      });
-    }).to.throw('Use of options "indexedValues: false" is ' +
-      'not allowed together with "namedValues: true"');
 	});
-  
-  it('should not use index for values with option `indexedValues` = false', function() {
-    jsonSql.configure({
-      namedValues: false,
+
+	it('should throw if `indexedValues = false` and `namedValues = true`', function() {
+		expect(function() {
+			jsonSql.configure({
+				namedValues: true,
+				indexedValues: false
+			});
+		}).to.throw(
+			'Option `indexedValues`: false is not allowed ' +
+			'together with option `namedValues`: true'
+		);
+	});
+
+	it('should not use index for values with option `indexedValues` = false', function() {
+		jsonSql.configure({
+			namedValues: false,
 			indexedValues: false
 		});
 
