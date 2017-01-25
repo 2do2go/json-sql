@@ -297,14 +297,19 @@ describe('Builder', function() {
 		expect(jsonSql._values).to.not.be.ok;
 		expect(jsonSql._placeholderId).to.not.be.ok;
 
+		var date = new Date();
 		var result = jsonSql.build({
 			type: 'insert',
 			table: 'users',
-			values: {name: 'John', surname: 'Doe'}
+			values: {
+				name: 'John',
+				surname: 'Doe',
+				date: date
+			}
 		});
 
-		expect(result.query).to.be.equal('insert into "users" ("name", "surname") values ' +
-			'(\'John\', \'Doe\');');
+		expect(result.query).to.be.equal('insert into "users" ("name", "surname", "date") values ' +
+			'(\'John\', \'Doe\', \'' + date.toISOString() + '\');');
 		expect(result.values).to.not.be.ok;
 	});
 
