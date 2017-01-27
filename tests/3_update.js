@@ -15,6 +15,7 @@ describe('Update', function() {
 		});
 
 		it('should be ok with default(`$set`)', function() {
+			var date = new Date();
 			var result = jsonSql.build({
 				type: 'update',
 				table: 'users',
@@ -22,13 +23,14 @@ describe('Update', function() {
 					name: 'Max',
 					age: 16,
 					lastVisit: null,
-					active: false
+					active: false,
+					date: date
 				}
 			});
 
 			expect(result.query).to.be.equal('update "users" set "name" = $p1, "age" = 16, ' +
-				'"lastVisit" = null, "active" = false;');
-			expect(result.values).to.be.eql({p1: 'Max'});
+				'"lastVisit" = null, "active" = false, "date" = $p2;');
+			expect(result.values).to.be.eql({p1: 'Max', p2: date});
 		});
 
 		it('should be ok with `$set`', function() {

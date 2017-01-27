@@ -262,6 +262,33 @@ describe('Builder', function() {
 		expect(result.getValuesObject()).to.be.eql({1: 'John'});
 	});
 
+	it('should throw if `indexedValues = false` and `namedValues = true`', function() {
+		expect(function() {
+			jsonSql.configure({
+				namedValues: true,
+				indexedValues: false
+			});
+		}).to.throw(
+			'Option `indexedValues`: false is not allowed ' +
+			'together with option `namedValues`: true'
+		);
+	});
+
+	it('should not use index for values with option `indexedValues` = false', function() {
+		jsonSql.configure({
+			namedValues: false,
+			indexedValues: false
+		});
+
+		var result = jsonSql.build({
+			table: 'users',
+			condition: {name: 'John'}
+		});
+
+		expect(result.query).to.be.equal('select * from "users" where "name" = $;');
+		expect(result.values).to.be.eql(['John']);
+	});
+
 	it('should create query without values with option `separatedValues` = false', function() {
 		jsonSql.configure({
 			separatedValues: false
@@ -270,14 +297,19 @@ describe('Builder', function() {
 		expect(jsonSql._values).to.not.be.ok;
 		expect(jsonSql._placeholderId).to.not.be.ok;
 
+		var date = new Date();
 		var result = jsonSql.build({
 			type: 'insert',
 			table: 'users',
-			values: {name: 'John', surname: 'Doe'}
+			values: {
+				name: 'John',
+				surname: 'Doe',
+				date: date
+			}
 		});
 
-		expect(result.query).to.be.equal('insert into "users" ("name", "surname") values ' +
-			'(\'John\', \'Doe\');');
+		expect(result.query).to.be.equal('insert into "users" ("name", "surname", "date") values ' +
+			'(\'John\', \'Doe\', \'' + date.toISOString() + '\');');
 		expect(result.values).to.not.be.ok;
 	});
 

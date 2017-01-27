@@ -36,7 +36,7 @@ gulp.task('lint', function() {
 });
 
 gulp.task('lintTests', function() {
-	return gulp.src('./tests/*.js')
+	return gulp.src('./tests/**/*.js')
 		.pipe(jshint())
 		.pipe(jshint.reporter('unix'));
 });

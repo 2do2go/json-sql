@@ -1221,18 +1221,22 @@ describe('Select', function() {
 			});
 
 			it('should be ok with `$or`:[`$or`, `$or`]', function() {
+				var date1 = new Date();
+				var date2 = new Date();
 				var result = jsonSql.build({
 					table: 'users',
 					condition: {
 						$or: [{
 							$or: {
 								name: 'John',
-								age: 12
+								age: 12,
+								date: date1
 							}
 						}, {
 							$or: {
 								name: 'Mark',
-								age: 14
+								age: 14,
+								date: date2
 							}
 						}]
 					}
@@ -1240,12 +1244,14 @@ describe('Select', function() {
 
 				expect(result.query).to.be.equal(
 					'select * from "users" ' +
-						'where ("name" = $p1 or "age" = 12) or ' +
-						'("name" = $p2 or "age" = 14);'
+						'where ("name" = $p1 or "age" = 12 or "date" = $p2) or ' +
+						'("name" = $p3 or "age" = 14 or "date" = $p4);'
 				);
 				expect(result.values).to.be.eql({
 					p1: 'John',
-					p2: 'Mark'
+					p2: date1,
+					p3: 'Mark',
+					p4: date2
 				});
 			});
 		});
