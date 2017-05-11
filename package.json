@@ -18,7 +18,7 @@
     "database"
   ],
   "dependencies": {
-    "underscore": "1.8.3"
+    "underscore": "1.8.2"
   },
   "devDependencies": {
     "chai": "2.2.0",
