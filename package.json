@@ -1,7 +1,7 @@
 {
   "name": "json-sql",
   "description": "node.js json to sql queries mapper",
-  "version": "0.3.11",
+  "version": "0.3.10",
   "author": "Artem Zhukov <artzhuchka@gmail.com>",
   "license": "MIT",
   "repository": {
@@ -18,7 +18,7 @@
     "database"
   ],
   "dependencies": {
-    "underscore": "1.8.3"
+    "underscore": "1.8.2"
   },
   "devDependencies": {
     "chai": "2.2.0",
