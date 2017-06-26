@@ -7,6 +7,16 @@ var jsonSql = require('../../lib')({
 var expect = require('chai').expect;
 
 describe('PostgreSQL dialect', function() {
+	describe('blocks', function () {
+		it('should be ok with object(`name`,`table`,`type`) array', function () {
+			var result = jsonSql.build({
+				table: 'users',
+				fields: [{name: 'zoneName', table: 'users', type: 'integer'}]
+			});
+			expect(result.query).to.be.equal('select "users"."zoneName"::integer from "users";');
+		});
+	});
+
 	describe('json', function() {
 		it('should correctly wrap each part of json path', function() {
 			var result = jsonSql.build({
