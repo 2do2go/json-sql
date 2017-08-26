@@ -17,7 +17,7 @@ describe('MSSQL dialect', function() {
 					'name': {$eq: 'test'}
 				}
 			});
-			expect(result.query).to.be.equal('select top(1) "user" from "test" where "name" = $1;');
+			expect(result.query).to.be.equal('select top(1) [user] from [test] where [name] = $1;');
 		});
 
 		it('should be ok with `limit` and `offset` properties', function() {
@@ -30,7 +30,7 @@ describe('MSSQL dialect', function() {
 					'name': {$eq: 'test'}
 				}
 			});
-			expect(result.query).to.be.equal('select  "user" from "test" where "name" = $1 order by 1' +
+			expect(result.query).to.be.equal('select [user] from [test] where [name] = $1 order by 1' +
 			 ' offset 2 rows fetch next 4 rows only;');
 		});
 	});
@@ -39,25 +39,29 @@ describe('MSSQL dialect', function() {
 			var result = jsonSql.build({
 				type: 'remove',
 				table: 'test',
-				returning: ['DELETED.*'],
+				returning: [
+					{table: 'deleted', name: '*'}
+				],
 				condition: {
 					Description: {$eq: 'test'}
 				}
 			});
-			expect(result.query).to.be.equal('delete from "test" output "DELETED".* where ' +
-			 '"Description" = $1;');
+			expect(result.query).to.be.equal('delete from [test] output [deleted].* where ' +
+				'[Description] = $1;');
 		});
 		it('should be ok with `insert` type', function() {
 			var result = jsonSql.build({
 				type: 'insert',
 				table: 'test',
-				returning: ['INSERTED.*'],
+				returning: [
+					{table: 'inserted', name: '*'}
+				],
 				values: {
 					Description: 'test',
 				}
 			});
-			expect(result.query).to.be.equal('insert into "test" ("Description") output ' +
-			 '"INSERTED".* values ($1);');
+			expect(result.query).to.be.equal('insert into [test] ([Description]) output ' +
+				'[inserted].* values ($1);');
 		});
 	});
 });
