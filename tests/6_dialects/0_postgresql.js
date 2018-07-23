@@ -122,6 +122,51 @@ describe('PostgreSQL dialect', function() {
 			);
 			expect(result.values).to.be.eql(['hello%']);
 		});
+
+		it('should be ok with `$jsonConcatenate` modification operator', function() {
+			var result = jsonSql.build({
+				type: 'update',
+				table: 'test',
+				modifier: {
+					$jsonConcatenate: {
+						params: {c: 1}
+					}
+				}
+			});
+
+			expect(result.query).to.be.equal('update "test" set "params" = "params" || $1;');
+			expect(result.values).to.be.eql(['{"c":1}']);
+		});
+
+		it('should be ok with `$jsonDelete` modification operator', function() {
+			var result = jsonSql.build({
+				type: 'update',
+				table: 'test',
+				modifier: {
+					$jsonDelete: {
+						params: {c: 1}
+					}
+				}
+			});
+
+			expect(result.query).to.be.equal('update "test" set "params" = "params" - $1;');
+			expect(result.values).to.be.eql(['{"c":1}']);
+		});
+
+		it('should be ok with `$jsonDeleteByPath` modification operator', function() {
+			var result = jsonSql.build({
+				type: 'update',
+				table: 'test',
+				modifier: {
+					$jsonDeleteByPath: {
+						params: '{1,d}'
+					}
+				}
+			});
+
+			expect(result.query).to.be.equal('update "test" set "params" = "params" #- $1;');
+			expect(result.values).to.be.eql(['{1,d}']);
+		});
 	});
 
 	describe('explain', function() {
