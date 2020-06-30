@@ -1281,6 +1281,24 @@ describe('Select', function() {
 			);
 			expect(result.values).to.be.eql({});
 		});
+
+		it('should be ok with expression', function() {
+			var result = jsonSql.build({
+				table: 'users',
+				group: [
+					'age',
+					'gender',
+					{func: {name: 'date_trunc', args: ['day', {field: 'birthday'}]}}
+				]
+			});
+
+			expect(result.query).to.be.equal(
+				'select * from "users" group by "age", "gender", date_trunc($p1, "birthday");'
+			);
+			expect(result.values).to.be.eql({
+				p1: 'day'
+			});
+		});
 	});
 
 	describe('sort', function() {
