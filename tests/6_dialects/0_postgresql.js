@@ -169,6 +169,141 @@ describe('PostgreSQL dialect', function() {
 		});
 	});
 
+	describe('array', function() {
+		it('should replace empty array to {}', function() {
+			var result = jsonSql.build({
+				table: 'test',
+				condition: {
+					'params': []
+				}
+			});
+
+			expect(result.query).to.be.equal(
+				'select * from "test" where "params" = $1;'
+			);
+			expect(result.values).to.be.eql(['{}']);
+		});
+
+		it('should be ok with empty array in modification', function() {
+			var result = jsonSql.build({
+				type: 'update',
+				table: 'test',
+				modifier: {
+					'params': []
+				}
+			});
+
+			expect(result.query).to.be.equal('update "test" set "params" = $1;');
+			expect(result.values).to.be.eql(['{}']);
+		});
+
+		it('should be ok with empty array in values', function() {
+			var result = jsonSql.build({
+				type: 'insert',
+				table: 'test',
+				values: {
+					'params': []
+				}
+			});
+
+			expect(result.query).to.be.equal('insert into "test" ("params") values ($1);');
+			expect(result.values).to.be.eql(['{}']);
+		});
+
+		it('should be ok with `$arrayContains` conditional operator', function() {
+			var result = jsonSql.build({
+				table: 'test',
+				condition: {
+					'params': {
+						$arrayContains: ['a']
+					}
+				}
+			});
+
+			expect(result.query).to.be.equal(
+				'select * from "test" where "params" @> array[$1];'
+			);
+			expect(result.values).to.be.eql(['a']);
+		});
+
+		it('should correctly wrap `$arrayContains` parameters to array', function() {
+			var result = jsonSql.build({
+				table: 'test',
+				condition: {
+					'params': {
+						$arrayContains: 'a'
+					}
+				}
+			});
+
+			expect(result.query).to.be.equal(
+				'select * from "test" where "params" @> array[$1];'
+			);
+			expect(result.values).to.be.eql(['a']);
+		});
+
+		it('should be ok with `$arrayIn` conditional operator', function() {
+			var result = jsonSql.build({
+				table: 'test',
+				condition: {
+					'params': {
+						$arrayIn: ['a']
+					}
+				}
+			});
+
+			expect(result.query).to.be.equal(
+				'select * from "test" where "params" <@ array[$1];'
+			);
+			expect(result.values).to.be.eql(['a']);
+		});
+
+		it('should correctly wrap `$arrayIn` parameters to array', function() {
+			var result = jsonSql.build({
+				table: 'test',
+				condition: {
+					'params': {
+						$arrayIn: 'a'
+					}
+				}
+			});
+
+			expect(result.query).to.be.equal(
+				'select * from "test" where "params" <@ array[$1];'
+			);
+			expect(result.values).to.be.eql(['a']);
+		});
+
+		it('should be ok with `$arrayOverlap` conditional operator', function() {
+			var result = jsonSql.build({
+				table: 'test',
+				condition: {
+					params: {
+						$arrayOverlap: ['a']
+					}
+				}
+			});
+
+			expect(result.query).to.be.equal('select * from "test" where "params" && array[$1];');
+			expect(result.values).to.be.eql(['a']);
+		});
+
+		it('should correctly wrap `$arrayOverlap` parameters to array', function() {
+			var result = jsonSql.build({
+				table: 'test',
+				condition: {
+					params: {
+						$arrayOverlap: 'a'
+					}
+				}
+			});
+
+			expect(result.query).to.be.equal('select * from "test" where "params" && array[$1];');
+			expect(result.values).to.be.eql(['a']);
+		});
+	});
+
+
 	describe('explain', function() {
 		it('should throw error without `query`, `select` and `expression` properties',
 			function() {
