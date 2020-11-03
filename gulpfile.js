@@ -18,7 +18,7 @@ gulp.task('coverage', function(callback) {
 		.pipe(istanbul())
 		.pipe(istanbul.hookRequire())
 		.on('finish', function() {
-			gulp.src(['./tests/*.js'], {read: false})
+			gulp.src(['./tests/**/*.js'], {read: false})
 				.pipe(mocha({
 					reporter: 'spec',
 					bail: true
